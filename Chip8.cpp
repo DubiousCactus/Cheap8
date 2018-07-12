@@ -20,7 +20,7 @@ Chip8::Chip8() {
 
 Chip8::~Chip8() {
 	delete cpu;
-	//delete ram;
+	delete ram; // Is this safe ?
 }
 
 
