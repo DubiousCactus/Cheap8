@@ -34,7 +34,8 @@ void CPU::step() {
 }
 
 void CPU::clearScreen() {
-	//TODO
+	for (int i = 0; i < SCREEN_W * SCREEN_H; i++)
+		screen[i] = 0;
 }
 
 void CPU::draw(const uint8_t x, const uint8_t y, const uint8_t height) {
