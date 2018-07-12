@@ -27,7 +27,8 @@ class CPU {
 		uint8_t screen[SCREEN_W * SCREEN_H];
 		Memory *ram; //TODO: use smart pointers
 		Stack *stack; //Must be at least of size 16
-		/* Add the delay timer and the sound timer */
+		uint8_t delay_timer;
+		uint8_t sound_timer;
 
 		void execute();
 		void clearScreen();

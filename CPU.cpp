@@ -45,8 +45,7 @@ void CPU::draw(const uint8_t x, const uint8_t y, const uint8_t height) {
 }
 
 uint8_t CPU::getDelay() {
-	//TODO
-	return 0;
+	return delay_timer;
 }
 
 uint8_t CPU::getKey() {
@@ -55,11 +54,11 @@ uint8_t CPU::getKey() {
 }
 
 void CPU::setDelay(uint8_t value) {
-	//TODO
+	delay_timer = value;
 }
 
 void CPU::setSoundTimer(uint8_t value) {
-	//TODO
+	sound_timer = value;
 }
 
 uint16_t CPU::getSpriteAddr(uint8_t register) {
