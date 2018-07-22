@@ -1,4 +1,5 @@
 cheap8
+.idea/
 cmake-build-debug/
 CMakeFiles
 cmake_install.cmake

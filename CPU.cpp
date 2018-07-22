@@ -5,6 +5,7 @@
  * Distributed under terms of the MIT license.
  */
 
+#include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -92,104 +93,14 @@ void CPU::execute() {
 			}
 			break;
 		case 0x1000: //Jump to address
-			uint16_t address = opcode & 0x0FFF;
-			//TODO: set address register ? Set program counter ?
-			break;
+			{
+				uint16_t address = opcode & 0x0FFF;
+				//TODO: set address register ? Set program counter ?
+				break;
+			}
 		case 0x2000: //Call subroutine
 			//uint16_t address = opcode & 0x0FFF;
 			//TODO: set program counter ?...
-			break;
-
-		/* TODO: Refactor the next few opcodes, for 0x3000 to 0x9000 */
-		case >= 0x3000 <= 0x9000: //Like that ? Nope!
-			short x = opcode & 0x0F00; //Register index
-			uint8_t value = opcode & 0x00FF;
-			if (x < 0 || x >= 16) {
-				std::cout << "ERROR: invalid register";
-				exit(1);
-			}
-
-			switch (opcode & 0xF000) {
-
-				case 0x3000: //Skip next opcode if VX = NN
-					if (V[x] == value)
-						PC += 2; //TODO: check that !
-					break;
-				case 0x4000: //Skip next opcode if VX != NN
-					if (V[x] != value)
-						PC += 2; //TODO: check that !
-					break;
-				case 0x6000: //Set VX = NN
-					V[x] = value;
-					break;
-				case 0x7000: //Set VX += NN (no carry flag)
-					V[x] += value;
-					break;
-
-				case 0x5000 || 0x8000 || 0x9000: //Refactor for 0x5XY0, 0x8XYN, 0x9XYN
-					short x = opcode & 0x0F00,
-						  y = opcode & 0x00F0;
-					if (x < 0 || x >= 16 || y < 0 || y >= 16) {
-						std::cout << "ERROR: invalid register";
-						exit(1);
-					}
-
-					switch (opcode & 0xF00F) {
-						case 0x5000: //Skip next opcode if VX == VY
-							if (V[x] == V[y])
-								PC += 2; //TODO: check that !
-							break;
-						/* TODO: Maybe move 0x8 to its own function ? */
-						case 0x8000: //Set VX = VY
-							V[x] = V[y];
-							break;
-						case 0x8001: //Set VX = (VX | VY)
-							V[x] = (V[x] | V[y]);
-							break;
-						case 0x8002: //Set VX = (VX & VY)
-							V[x] = (V[x] & V[y]);
-							break;
-						case 0x8003: //Set VX = (VX ^ VY)
-							V[x] = (V[x] ^ V[y]);
-							break;
-						case 0x8004: //Set VX += VY, VF is set to 1 when there's a carry, and to 0 when there isn't
-							V[x] += V[y];
-							//TODO:
-							//if (carry)
-							//	V[0xF] = 1;
-							break;
-						case 0x8005: //Set VX -= VY, VF is set to 0 when there's a borrow, and 1 when there isn't
-							V[x] -= V[y];
-							//TODO:
-							//if (borrow)
-							//	V[0xF] = 0;
-							break;
-						case 0x8006: //Shift Vx = Vy >> 1
-							//TODO: V[0xF] = LSB of VY (but remember BIG ENDIAN !!)
-							V[x] = V[y] >> 1; 
-							break;
-						case 0x8007: //Set VX = VY - VX, VF is set to 0 when there's a borrow, and 1 when there isn't
-							V[x] = V[y] - V[x];
-							//TODO:
-							//if (borrow)
-							//	V[0xF] = 0;
-							break;
-						case 0x800E: //Shift and set Vx = Vy = Vy << 1
-							//TODO: V[0xF] = MSB of V[y] (remember BIG ENDIAND)
-							V[y] <<= 1;
-							V[x] = V[y];
-							break;
-						case 0x9000: //Skips the next instruction if VX != VY
-							if (V[x] != V[y])
-								PC += 2; //TODO: Check that
-							break;
-						default:
-							break;
-					}
-					break;
-				default:
-					break;
-			}
 			break;
 		case 0xA000: //Set I = NNN
 			I = (opcode & 0x0FFF);
@@ -205,63 +116,161 @@ void CPU::execute() {
 			break;
 
 		case 0xE000:
-			uint8_t x = opcode & 0x0F00;
-			if (x < 0 || x >= 16) {
-				std::cout << "ERROR: invalid register";
-				exit(1);
-			}
+			{
+				uint8_t x = opcode & 0x0F00;
+				if (x < 0 || x >= 16) {
+					std::cout << "ERROR: invalid register";
+					exit(1);
+				}
 
-			switch (opcode & 0xF0FF) {
-				case 0xE09E: //Skip next instruction if the key in VX is pressed
-					//TODO
-					break;
-				case 0xE0A1: //Skip next instruction if the key in VX isn't pressed
-					//TODO
-					break;
+				switch (opcode & 0xF0FF) {
+					case 0xE09E: //Skip next instruction if the key in VX is pressed
+						//TODO
+						break;
+					case 0xE0A1: //Skip next instruction if the key in VX isn't pressed
+						//TODO
+						break;
+				}
+				break;
 			}
-			break;
 
 		case 0xF000:
-			uint8_t x = opcode & 0x0F00;
-			if (x < 0 || x >= 16) {
-				std::cout << "ERROR: invalid register";
-				exit(1);
-			}
+			{
+				uint8_t x = opcode & 0x0F00;
+				if (x < 0 || x >= 16) {
+					std::cout << "ERROR: invalid register";
+					exit(1);
+				}
 
-			switch (opcode & 0x00FF) {
-				case 0x0007: //Set VX = delay timer
-					V[x] = getDelay();
-					break;
-				case 0x000A: //Set VX = key press (blocking)
-					V[x] = getKey();
-					break
-				case 0x0015: //Set delay timer = VX
-					setDelay(V[x]);
-					break;
-				case 0x0018: //Set sound timer = VX
-					setSoundTimer(V[x]);
-					break;
-				case 0x001E: //Set I += Vx
-					I += V[x];
-					break;
-				case 0x0029: //Set I = the location of the sprite for the character in VX
-					I = getSpriteAddr(V[x]);
-					break;
-				case 0x0033: //Store BCD of VX
-					//TODO
-					break;
-				case 0x0055: //Dump V0 to VX in memory (starting at I)
-					dumpRegisters(V[x], &I);
-					break;
-				case 0x0065: //Fill V0 to VX from memory (starting at I)
-					loadRegisters(V[x], &I);
-					break:
-				default:
-					break;
+				switch (opcode & 0x00FF) {
+					case 0x0007: //Set VX = delay timer
+						V[x] = getDelay();
+						break;
+					case 0x000A: //Set VX = key press (blocking)
+						V[x] = getKey();
+						break;
+					case 0x0015: //Set delay timer = VX
+						setDelay(V[x]);
+						break;
+					case 0x0018: //Set sound timer = VX
+						setSoundTimer(V[x]);
+						break;
+					case 0x001E: //Set I += Vx
+						I += V[x];
+						break;
+					case 0x0029: //Set I = the location of the sprite for the character in VX
+						I = getSpriteAddr(V[x]);
+						break;
+					case 0x0033: //Store BCD of VX
+						//TODO
+						break;
+					case 0x0055: //Dump V0 to VX in memory (starting at I)
+						dumpRegisters(V[x], I);
+						break;
+					case 0x0065: //Fill V0 to VX from memory (starting at I)
+						loadRegisters(V[x], I);
+						break;
+					default:
+						break;
+				}
+				break;
 			}
-			break;
 		default:
-			printf("[WARNING] Unhandled opcode %02X\n", opcode);
+			/* TODO: Refactor the next few opcodes, for 0x3000 to 0x9000 */
+			if ((opcode & 0xF000) >= 0x3000 && (opcode & 0xF000) <= 0x9000) {
+				short x = opcode & 0x0F00; //Register index
+				uint8_t value = opcode & 0x00FF;
+				if (x < 0 || x >= 16) {
+					std::cout << "ERROR: invalid register";
+					exit(1);
+				}
+
+				switch (opcode & 0xF000) {
+
+					case 0x3000: //Skip next opcode if VX = NN
+						if (V[x] == value)
+							PC += 2; //TODO: check that !
+						break;
+					case 0x4000: //Skip next opcode if VX != NN
+						if (V[x] != value)
+							PC += 2; //TODO: check that !
+						break;
+					case 0x6000: //Set VX = NN
+						V[x] = value;
+						break;
+					case 0x7000: //Set VX += NN (no carry flag)
+						V[x] += value;
+						break;
+
+					case 0x5000 || 0x8000 || 0x9000: //Refactor for 0x5XY0, 0x8XYN, 0x9XYN
+						{
+							short x = opcode & 0x0F00,
+								  y = opcode & 0x00F0;
+							if (x < 0 || x >= 16 || y < 0 || y >= 16) {
+								std::cout << "ERROR: invalid register";
+								exit(1);
+							}
+
+							switch (opcode & 0xF00F) {
+								case 0x5000: //Skip next opcode if VX == VY
+									if (V[x] == V[y])
+										PC += 2; //TODO: check that !
+									break;
+								/* TODO: Maybe move 0x8 to its own function ? */
+								case 0x8000: //Set VX = VY
+									V[x] = V[y];
+									break;
+								case 0x8001: //Set VX = (VX | VY)
+									V[x] = (V[x] | V[y]);
+									break;
+								case 0x8002: //Set VX = (VX & VY)
+									V[x] = (V[x] & V[y]);
+									break;
+								case 0x8003: //Set VX = (VX ^ VY)
+									V[x] = (V[x] ^ V[y]);
+									break;
+								case 0x8004: //Set VX += VY, VF is set to 1 when there's a carry, and to 0 when there isn't
+									V[x] += V[y];
+									//TODO:
+									//if (carry)
+									//	V[0xF] = 1;
+									break;
+								case 0x8005: //Set VX -= VY, VF is set to 0 when there's a borrow, and 1 when there isn't
+									V[x] -= V[y];
+									//TODO:
+									//if (borrow)
+									//	V[0xF] = 0;
+									break;
+								case 0x8006: //Shift Vx = Vy >> 1
+									//TODO: V[0xF] = LSB of VY (but remember BIG ENDIAN !!)
+									V[x] = V[y] >> 1; 
+									break;
+								case 0x8007: //Set VX = VY - VX, VF is set to 0 when there's a borrow, and 1 when there isn't
+									V[x] = V[y] - V[x];
+									//TODO:
+									//if (borrow)
+									//	V[0xF] = 0;
+									break;
+								case 0x800E: //Shift and set Vx = Vy = Vy << 1
+									//TODO: V[0xF] = MSB of V[y] (remember BIG ENDIAND)
+									V[y] <<= 1;
+									V[x] = V[y];
+									break;
+								case 0x9000: //Skips the next instruction if VX != VY
+									if (V[x] != V[y])
+										PC += 2; //TODO: Check that
+									break;
+								default:
+									break;
+							}
+							break;
+						}
+					default:
+						break;
+				}
+			} else {
+				printf("[WARNING] Unhandled opcode %02X\n", opcode);
+			}
 			break;
 	}
 }
