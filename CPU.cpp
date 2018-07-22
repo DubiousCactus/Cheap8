@@ -77,7 +77,7 @@ void CPU::loadRegisters(uint8_t register, uint16_t addr) {
 
 void CPU::execute() {
 
-	printf("[*] Executing opcode: %02X\n", opcode);
+	printf("[*] Executing opcode: 0x%02X\n", opcode);
 
 	switch (opcode & 0xF000) {
 		case 0x0000:
@@ -117,7 +117,7 @@ void CPU::execute() {
 
 		case 0xE000:
 			{
-				uint8_t x = opcode & 0x0F00;
+				uint8_t x = (opcode & 0x0F00) / 0x100;
 				if (x < 0 || x >= 16) {
 					std::cout << "ERROR: invalid register";
 					exit(1);
@@ -136,7 +136,7 @@ void CPU::execute() {
 
 		case 0xF000:
 			{
-				uint8_t x = opcode & 0x0F00;
+				uint8_t x = (opcode & 0x0F00) / 0x100;
 				if (x < 0 || x >= 16) {
 					std::cout << "ERROR: invalid register";
 					exit(1);
@@ -178,10 +178,10 @@ void CPU::execute() {
 		default:
 			/* TODO: Refactor the next few opcodes, for 0x3000 to 0x9000 */
 			if ((opcode & 0xF000) >= 0x3000 && (opcode & 0xF000) <= 0x9000) {
-				short x = opcode & 0x0F00; //Register index
+				short x = (opcode & 0x0F00) / 0x100; //Register index
 				uint8_t value = opcode & 0x00FF;
 				if (x < 0 || x >= 16) {
-					std::cout << "ERROR: invalid register";
+					printf("ERROR (op=0x%02X): invalid register (R%i)", opcode, x);
 					exit(1);
 				}
 
@@ -204,8 +204,8 @@ void CPU::execute() {
 
 					case 0x5000 || 0x8000 || 0x9000: //Refactor for 0x5XY0, 0x8XYN, 0x9XYN
 						{
-							short x = opcode & 0x0F00,
-								  y = opcode & 0x00F0;
+							short x = (opcode & 0x0F00) / 0x100,
+								  y = (opcode & 0x00F0) / 0x10;
 							if (x < 0 || x >= 16 || y < 0 || y >= 16) {
 								std::cout << "ERROR: invalid register";
 								exit(1);
