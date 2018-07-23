@@ -21,6 +21,7 @@ CPU::CPU() {
 	PC = GAME_OFFSET;
 	opcode = 0;
 	JMP = false;
+	srand(time(NULL));
 }
 
 CPU::~CPU() {
@@ -37,6 +38,7 @@ void CPU::step() {
 	} else {
 		JMP = false;
 	}
+	//TODO: Use a timer to slow the CPU down till it's playable (what's the reference ?)
 }
 
 void CPU::clearScreen() {
@@ -54,7 +56,7 @@ uint8_t CPU::getDelay() {
 }
 
 uint8_t CPU::getKey() {
-	//TODO
+	//TODO: returns the pressed key
 	return 0;
 }
 
@@ -106,7 +108,7 @@ void CPU::execute() {
 		case 0x2000: //Call subroutine
 			{
 				uint16_t address = opcode & 0x0FFF;
-				//TODO: set program counter ?...
+				//TODO: set program counter ?... Store return address in the stack ?
 				PC = address;
 				JMP = true;
 				break;
@@ -240,26 +242,26 @@ void CPU::execute() {
 									V[x] = (V[x] ^ V[y]);
 									break;
 								case 0x8004: //Set VX += VY, VF is set to 1 when there's a carry, and to 0 when there isn't
+									if ((V[x] + V[y]) > 0xFF) //Since each register is 8 bits...
+										V[0xF] = 1;
+
 									V[x] += V[y];
-									//TODO:
-									//if (carry)
-									//	V[0xF] = 1;
 									break;
 								case 0x8005: //Set VX -= VY, VF is set to 0 when there's a borrow, and 1 when there isn't
+									if ((V[x] - V[y]) < 0) //TODO: Verify
+										V[0xF] = 0;
+
 									V[x] -= V[y];
-									//TODO:
-									//if (borrow)
-									//	V[0xF] = 0;
 									break;
 								case 0x8006: //Shift Vx = Vy >> 1
 									//TODO: V[0xF] = LSB of VY (but remember BIG ENDIAN !!)
 									V[x] = V[y] >> 1; 
 									break;
 								case 0x8007: //Set VX = VY - VX, VF is set to 0 when there's a borrow, and 1 when there isn't
+									if ((V[y] - V[x]) < 0) //TODO: Verify
+										V[0xF] = 0;
+
 									V[x] = V[y] - V[x];
-									//TODO:
-									//if (borrow)
-									//	V[0xF] = 0;
 									break;
 								case 0x800E: //Shift and set Vx = Vy = Vy << 1
 									//TODO: V[0xF] = MSB of V[y] (remember BIG ENDIAND)
