@@ -20,6 +20,7 @@ CPU::CPU() {
 	I = 0;
 	PC = GAME_OFFSET;
 	opcode = 0;
+	JMP = false;
 }
 
 CPU::~CPU() {
@@ -31,12 +32,15 @@ void CPU::step() {
 	printf("[*] CPU step (PC=%02X): fetching opcode...\n", PC);
 	opcode = ram->readOpCode(PC); //Fetch next opcode in the RAM
 	execute();
-	PC += 2; //An opcode is 2 bytes while the RAM is byte encoded
+	if (!JMP) {
+		PC += 2; //An opcode is 2 bytes while the RAM is byte encoded
+	} else {
+		JMP = false;
+	}
 }
 
 void CPU::clearScreen() {
-	for (int i = 0; i < SCREEN_W * SCREEN_H; i++)
-		screen[i] = 0;
+	memset(screen, 0, SCREEN_H * SCREEN_W);
 }
 
 void CPU::draw(const uint8_t x, const uint8_t y, const uint8_t height) {
@@ -95,21 +99,27 @@ void CPU::execute() {
 		case 0x1000: //Jump to address
 			{
 				uint16_t address = opcode & 0x0FFF;
-				//TODO: set address register ? Set program counter ?
+				PC = address;
+				JMP = true;
 				break;
 			}
 		case 0x2000: //Call subroutine
-			//uint16_t address = opcode & 0x0FFF;
-			//TODO: set program counter ?...
-			break;
+			{
+				uint16_t address = opcode & 0x0FFF;
+				//TODO: set program counter ?...
+				PC = address;
+				JMP = true;
+				break;
+			}
 		case 0xA000: //Set I = NNN
 			I = (opcode & 0x0FFF);
 			break;
 		case 0xB000: //Jump to NNN + V0
-			PC = (opcode & 0x0FFF) + V[0]; //TODO: Check that a jump is done through PC !
+			PC = (opcode & 0x0FFF) + V[0];
+			JMP = true;
 			break;
 		case 0xC000: //Set VX = NN & random()
-			V[opcode & 0x0F00] = rand() & (opcode & 0x00FF);
+			V[opcode & 0x0F00] = rand() & (opcode & 0x00FF); //TODO: Make sure this is done right!
 			break;
 		case 0xD000: //Draw a sprite at (VX, VY), that has a width of 8 pixels and a height of N pixels
 			draw(V[opcode & 0x0F00], V[opcode & 0x00F0], opcode & 0x000F);
@@ -119,7 +129,7 @@ void CPU::execute() {
 			{
 				uint8_t x = (opcode & 0x0F00) / 0x100;
 				if (x < 0 || x >= 16) {
-					std::cout << "ERROR: invalid register";
+					std::cout << "ERROR: invalid register (R" << x << ")" << std::endl;
 					exit(1);
 				}
 
@@ -189,11 +199,11 @@ void CPU::execute() {
 
 					case 0x3000: //Skip next opcode if VX = NN
 						if (V[x] == value)
-							PC += 2; //TODO: check that !
+							PC += 2;
 						break;
 					case 0x4000: //Skip next opcode if VX != NN
 						if (V[x] != value)
-							PC += 2; //TODO: check that !
+							PC += 2;
 						break;
 					case 0x6000: //Set VX = NN
 						V[x] = value;
@@ -214,7 +224,7 @@ void CPU::execute() {
 							switch (opcode & 0xF00F) {
 								case 0x5000: //Skip next opcode if VX == VY
 									if (V[x] == V[y])
-										PC += 2; //TODO: check that !
+										PC += 2;
 									break;
 								/* TODO: Maybe move 0x8 to its own function ? */
 								case 0x8000: //Set VX = VY
@@ -258,7 +268,7 @@ void CPU::execute() {
 									break;
 								case 0x9000: //Skips the next instruction if VX != VY
 									if (V[x] != V[y])
-										PC += 2; //TODO: Check that
+										PC += 2;
 									break;
 								default:
 									break;

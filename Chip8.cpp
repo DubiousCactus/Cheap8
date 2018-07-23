@@ -26,7 +26,7 @@ Chip8::~Chip8() {
 
 void Chip8::init() {
 	/* Init registers and memory */
-
+	/* Init fonts ? */
 }
 
 
@@ -75,6 +75,8 @@ void Chip8::stop() {
 	running = false;
 }
 
+
+/* Load a CHIP-8 program - from a file - into the RAM */
 void Chip8::load(const char *file_name) {
 	FILE *file = fopen(file_name, "rb");
 	if (file != NULL) {
@@ -94,7 +96,7 @@ void Chip8::load(const char *file_name) {
 		}
 
 		if (!ram->writeBytes(0x200, size_read, bytes)) {
-			printf("[!] ERROR: could not write the game in RAM\n");
+			printf("[!] ERROR: could not write the game in the RAM\n");
 			exit(1);
 		}
 

@@ -29,6 +29,7 @@ class CPU {
 		Stack *stack; //Must be at least of size 16
 		uint8_t delay_timer;
 		uint8_t sound_timer;
+		bool JMP;
 
 		void execute();
 		void clearScreen();
