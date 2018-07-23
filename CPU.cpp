@@ -81,6 +81,14 @@ void CPU::loadRegisters(uint8_t register, uint16_t addr) {
 	//TODO
 }
 
+
+void CPU::setBCD(uint8_t register) {
+	/* TODO: Simplify this... Do BCD + binary mask instead of this BS */
+	*(I+0) = register / 100;
+	*(I+1) = (register / 10) - (register / 100); 
+	*(I+2) = register;
+}
+
 void CPU::execute() {
 
 	printf("[*] Executing opcode: 0x%02X\n", opcode);
@@ -174,7 +182,8 @@ void CPU::execute() {
 						I = getSpriteAddr(V[x]);
 						break;
 					case 0x0033: //Store BCD of VX
-						//TODO
+						setBCD(V[x]);
+						//...
 						break;
 					case 0x0055: //Dump V0 to VX in memory (starting at I)
 						dumpRegisters(V[x], I);

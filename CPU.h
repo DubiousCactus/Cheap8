@@ -41,6 +41,7 @@ class CPU {
 		uint16_t getSpriteAddr(uint8_t register);
 		void dumpRegisters(uint8_t register, uint16_t addr);
 		void loadRegisters(uint8_t register, uint16_t addr);
+		void setBCD(uint8_t register);
 
 
 	public:
