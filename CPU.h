@@ -39,8 +39,8 @@ private:
   void setDelay(uint8_t value);
   void setSoundTimer(uint8_t value);
   uint16_t *getSpriteAddr(uint8_t register);
-  void dumpRegisters(uint8_t register, uint16_t *addr);
-  void loadRegisters(uint8_t register, uint16_t *addr);
+  void dumpRegisters(int r_offset, uint16_t *addr);
+  void loadRegisters(int r_offset, uint16_t *addr);
   void setBCD(uint8_t register);
 
 public:
