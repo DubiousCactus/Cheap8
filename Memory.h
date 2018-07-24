@@ -8,6 +8,7 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
+#include <cstddef>
 #include <cstdint>
 
 #define MEMORY_SIZE 0xFFF
@@ -15,19 +16,19 @@
 
 class Memory {
 
-	private:
-		uint8_t locations[MEMORY_SIZE];
-		static Memory *instance;
+private:
+  uint8_t locations[MEMORY_SIZE];
+  static Memory *instance;
 
-		Memory();
+  Memory();
 
-	public:
-		~Memory();
-		static Memory *getInstance();
-		uint8_t readByte(uint16_t addr);
-		uint16_t readOpCode(uint16_t addr);
-		bool writeByte(uint16_t addr, uint8_t byte);
-		bool writeBytes(uint16_t addr, size_t length, const uint8_t *bytes);
+public:
+  ~Memory();
+  static Memory *getInstance();
+  uint8_t readByte(uint16_t addr);
+  uint16_t readOpCode(uint16_t addr);
+  bool writeByte(uint16_t addr, uint8_t byte);
+  bool writeBytes(uint16_t addr, std::size_t length, const uint8_t *bytes);
 };
 
 #endif /* !MEMORY_H */
