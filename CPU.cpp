@@ -73,11 +73,13 @@ uint16_t *CPU::getSpriteAddr(uint8_t register) {
 /* Store V0 to VX (r - included) in memory, starting at address I */
 void CPU::dumpRegisters(int r_offset, uint16_t *addr) {
  	for (int i = 0; i <= r_offset; i++)
-		*addr++ = V[i];
+		*(addr + i) = V[i];
 }
 
+/* Fills V0 to VX (r - included) with values from memory starting at address I */
 void CPU::loadRegisters(int r_offset, uint16_t *addr) {
-
+	for (int i = 0; i <= r_offset; i++)
+		V[i] = *(addr + i);
 }
 
 /* Stores the BCD representation of the given register into I */
