@@ -11,6 +11,16 @@
 #include <cstring>
 #include <iostream>
 
+
+/* TODO --IMPORTANT AS FUCK-- TODO
+ * Use the ram object to manipulate the memory !!!
+ * It was probably a dumb idea to re-create the RAM anyway, since it adds
+ * another level of abstraction which is quite useless...
+ * But now let's go for it...
+ * I doesn't need to be a pointer in that case ;) No need to show off with the
+ * pointy pointers juggle heheh
+ */
+
 CPU::CPU() {
   stack = new Stack();
   ram = Memory::getInstance();
