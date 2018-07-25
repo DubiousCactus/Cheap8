@@ -36,7 +36,11 @@ CPU::Step()
   printf("[*] CPU step (PC=%02X): fetching opcode...\n", mPC);
   mOpcode = mRam->ReadOpCode(mPC); // Fetch next opcode in the RAM
   Execute();
-  mPC += 2 * mJMP; // An opcode is 2 bytes while the RAM is byte encoded
+
+  if (!mJMP)
+    mPC += 2;
+  else
+    mJMP = false;
   // TODO: Use a timer to slow the CPU down till it's playable (what's the
   // reference ?)
 }
@@ -68,7 +72,7 @@ CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < 8; j++) {
       if (mScreen[i * j])
-        mV[0xF] = 1; // Collision !
+        mV[0xF] = 1;                    // Collision !
       mScreen[i * j] = !mScreen[i * j]; // Flip the pixel
     }
   }
