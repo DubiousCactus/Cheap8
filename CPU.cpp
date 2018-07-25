@@ -289,9 +289,8 @@ CPU::Execute()
 
                 mV[x] += mV[y];
                 break;
-              case 0x8005: // Set VX -= VY, VF is set to 0 when there's a
-                           // borrow, and 1 when there isn't
-                if ((mV[x] - mV[y]) < 0) // TODO: Verify
+              case 0x8005: // Set VX -= VY
+                if (mV[y] > mV[x]) //Set VF to 0 if there's a borrow
                   mV[0xF] = 0;
 
                 mV[x] -= mV[y];
@@ -300,9 +299,8 @@ CPU::Execute()
                 // TODO: V[0xF] = LSB of VY (but remember BIG ENDIAN !!)
                 mV[x] = mV[y] >> 1;
                 break;
-              case 0x8007: // Set VX = VY - VX, VF is set to 0 when there's a
-                           // borrow, and 1 when there isn't
-                if ((mV[y] - mV[x]) < 0) // TODO: Verify
+              case 0x8007: // Set VX = VY - VX
+                if (mV[x] > mV[y]) //Set VF to 0 if there's a borrow
                   mV[0xF] = 0;
 
                 mV[x] = mV[y] - mV[x];
