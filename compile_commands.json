@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/home/transpalette/Code/Cheap8",
+  "command": "/usr/bin/c++   -I/home/transpalette/Code/Cheap8/.  -g   -std=gnu++11 -o CMakeFiles/Cheap8.dir/Chip8.cpp.o -c /home/transpalette/Code/Cheap8/Chip8.cpp",
+  "file": "/home/transpalette/Code/Cheap8/Chip8.cpp"
+},
+{
+  "directory": "/home/transpalette/Code/Cheap8",
+  "command": "/usr/bin/c++   -I/home/transpalette/Code/Cheap8/.  -g   -std=gnu++11 -o CMakeFiles/Cheap8.dir/CPU.cpp.o -c /home/transpalette/Code/Cheap8/CPU.cpp",
+  "file": "/home/transpalette/Code/Cheap8/CPU.cpp"
+},
+{
+  "directory": "/home/transpalette/Code/Cheap8",
+  "command": "/usr/bin/c++   -I/home/transpalette/Code/Cheap8/.  -g   -std=gnu++11 -o CMakeFiles/Cheap8.dir/main.cpp.o -c /home/transpalette/Code/Cheap8/main.cpp",
+  "file": "/home/transpalette/Code/Cheap8/main.cpp"
+},
+{
+  "directory": "/home/transpalette/Code/Cheap8",
+  "command": "/usr/bin/c++   -I/home/transpalette/Code/Cheap8/.  -g   -std=gnu++11 -o CMakeFiles/Cheap8.dir/Memory.cpp.o -c /home/transpalette/Code/Cheap8/Memory.cpp",
+  "file": "/home/transpalette/Code/Cheap8/Memory.cpp"
+},
+{
+  "directory": "/home/transpalette/Code/Cheap8",
+  "command": "/usr/bin/c++   -I/home/transpalette/Code/Cheap8/.  -g   -std=gnu++11 -o CMakeFiles/Cheap8.dir/Stack.cpp.o -c /home/transpalette/Code/Cheap8/Stack.cpp",
+  "file": "/home/transpalette/Code/Cheap8/Stack.cpp"
+}
+]

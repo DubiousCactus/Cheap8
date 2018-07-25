@@ -30,7 +30,7 @@ CPU::CPU() {
   PC = GAME_OFFSET;
   opcode = 0;
   JMP = false;
-  srand(time(NULL));
+  srand((unsigned)time(NULL));
 }
 
 CPU::~CPU() {
@@ -140,7 +140,7 @@ void CPU::execute() {
     break;
   case 0xC000: // Set VX = NN & random()
     V[opcode & 0x0F00] =
-        rand() & (opcode & 0x00FF); // TODO: Make sure this is done right!
+        (rand() % 255) & (opcode & 0x00FF); // TODO: Make sure this is done right!
     break;
   case 0xD000: // Draw a sprite at (VX, VY), that has a width of 8 pixels and a
                // height of N pixels
