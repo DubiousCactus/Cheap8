@@ -16,37 +16,38 @@
 #define SCREEN_H 32
 #define GAME_OFFSET 0x200
 
-class CPU {
+class CPU
+{
 
 private:
   /* V0-VF (4 bits index), 8-bit size each */
-  uint8_t V[16];   // Registers
-  uint16_t I;     // Address register, 16 bits wide
-  uint16_t PC;     // Program counter, 16 bits
-  uint16_t opcode; // 2 bytes
-  uint8_t screen[SCREEN_W * SCREEN_H];
-  Memory *ram;  // TODO: use smart pointers
-  Stack *stack; // Must be at least of size 16
-  uint8_t delay_timer;
-  uint8_t sound_timer;
-  bool JMP;
+  uint8_t mV[16];   // Registers
+  uint16_t mI;      // Address register, 16 bits wide
+  uint16_t mPC;     // Program counter, 16 bits
+  uint16_t mOpcode; // 2 bytes
+  uint8_t mScreen[SCREEN_W * SCREEN_H];
+  Memory* mRam;  // TODO: use smart pointers
+  Stack* mStack; // Must be at least of size 16
+  uint8_t mDelay_timer;
+  uint8_t mSound_timer;
+  bool mJMP;
 
-  void execute();
-  void clearScreen();
-  void draw(const uint8_t x, const uint8_t y, const uint8_t height);
-  uint8_t getDelay();
-  uint8_t getKey();
-  void setDelay(uint8_t value);
-  void setSoundTimer(uint8_t value);
-  uint16_t getSpriteAddr(uint8_t register);
-  void dumpRegisters(int r_offset, uint16_t addr);
-  void loadRegisters(int r_offset, uint16_t addr);
-  void setBCD(uint8_t register);
+  void Execute();
+  void ClearScreen();
+  void Draw(const uint8_t x, const uint8_t y, const uint8_t height);
+  uint8_t GetDelay();
+  uint8_t GetKey();
+  void SetDelay(uint8_t value);
+  void SetSoundTimer(uint8_t value);
+  uint16_t GetSpriteAddr(uint8_t register);
+  void DumpRegisters(int r_offset, uint16_t addr);
+  void LoadRegisters(int r_offset, uint16_t addr);
+  void SetBCD(uint8_t register);
 
 public:
   CPU();
   ~CPU();
-  void step();
+  void Step();
 };
 
 #endif /* !CPU_H */

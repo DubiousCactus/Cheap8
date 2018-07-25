@@ -10,43 +10,53 @@
 #include <cstdlib>
 #include <cstring>
 
-Memory *Memory::instance = 0;
+Memory* Memory::mInstance = 0;
 
-Memory::Memory() { memset(locations, 0, MEMORY_SIZE); }
+Memory::Memory()
+{
+  memset(mLocations, 0, MEMORY_SIZE);
+}
 
 Memory::~Memory() {}
 
-uint8_t Memory::readByte(uint16_t addr) {
+uint8_t
+Memory::ReadByte(uint16_t addr)
+{
   if (addr < 0 || addr >= MEMORY_SIZE) {
     printf("[!] ERROR: address out of bounds\n");
     exit(1);
   }
 
-  return locations[addr];
+  return mLocations[addr];
 }
 
-uint16_t Memory::readOpCode(uint16_t addr) {
+uint16_t
+Memory::ReadOpCode(uint16_t addr)
+{
   if (addr < 0 || addr >= MEMORY_SIZE) {
     printf("[!] ERROR: address out of bounds\n");
     exit(1);
   }
 
   /* Shift the first byte 8 bits to the left and OR the following byte */
-  return (locations[addr] << 8) | locations[addr + 1];
+  return (mLocations[addr] << 8) | mLocations[addr + 1];
 }
 
-bool Memory::writeByte(uint16_t addr, const uint8_t byte) {
+bool
+Memory::WriteByte(uint16_t addr, const uint8_t byte)
+{
   if (addr < 0 || addr >= MEMORY_SIZE) {
     printf("[!] ERROR: address out of bounds\n");
     return false;
   } else {
-    locations[addr] = byte;
+    mLocations[addr] = byte;
     return true;
   }
 }
 
-bool Memory::writeBytes(uint16_t addr, std::size_t length,
-                        const uint8_t *bytes) {
+bool
+Memory::WriteBytes(uint16_t addr, std::size_t length, const uint8_t* bytes)
+{
   if (addr < 0 || addr >= MEMORY_SIZE) {
     printf("[!] ERROR: address out of bounds\n");
     return false;
@@ -54,16 +64,18 @@ bool Memory::writeBytes(uint16_t addr, std::size_t length,
     printf("[!] ERROR: not enough memory\n");
     return false;
   } else {
-    memcpy(&locations[addr], bytes, length); // Write at addr offset
+    memcpy(&mLocations[addr], bytes, length); // Write at addr offset
 
     return true;
   }
 }
 
-Memory *Memory::getInstance() {
-  if (!instance) {
-    instance = new Memory();
+Memory*
+Memory::GetInstance()
+{
+  if (!mInstance) {
+    mInstance = new Memory();
   }
 
-  return instance;
+  return mInstance;
 }
