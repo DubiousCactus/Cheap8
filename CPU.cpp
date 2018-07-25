@@ -42,11 +42,7 @@ void CPU::step() {
   printf("[*] CPU step (PC=%02X): fetching opcode...\n", PC);
   opcode = ram->readOpCode(PC); // Fetch next opcode in the RAM
   execute();
-  if (!JMP) {
-    PC += 2; // An opcode is 2 bytes while the RAM is byte encoded
-  } else {
-    JMP = false;
-  }
+  PC += 2 * JMP; // An opcode is 2 bytes while the RAM is byte encoded
   // TODO: Use a timer to slow the CPU down till it's playable (what's the
   // reference ?)
 }
