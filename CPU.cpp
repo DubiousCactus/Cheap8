@@ -93,7 +93,8 @@ CPU::SetSoundTimer(uint8_t value)
   mSound_timer = value;
 }
 
-uint16_t CPU::GetSpriteAddr(uint8_t register)
+uint16_t
+CPU::GetSpriteAddr(uint8_t r)
 {
   // TODO
   return 0x000;
@@ -121,8 +122,8 @@ void
 CPU::SetBCD(uint8_t r)
 {
   mRam->WriteByte(mI, r / 100);
-  mRam->WriteByte(mI + 1, (r / 10) - mRam->ReadByte(mI));
-  mRam->WriteByte(mI + 2, r - mRam->ReadByte(mI) + mRam->ReadByte(mI + 1));
+  mRam->WriteByte(mI + 1, r / 10 % 10);
+  mRam->WriteByte(mI + 2, r % 10);
 }
 
 void
@@ -210,8 +211,7 @@ CPU::Execute()
         case 0x001E: // Set mI += Vx
           mI += mV[x];
           break;
-        case 0x0029: // Set I = the location of the sprite for the character in
-                     // VX
+        case 0x0029: // Set I = location of the sprite for the character in VX
           mI = GetSpriteAddr(mV[x]);
           break;
         case 0x0033: // Store BCD of VX
@@ -282,15 +282,14 @@ CPU::Execute()
               case 0x8003: // Set VX = (VX ^ VY)
                 mV[x] = (mV[x] ^ mV[y]);
                 break;
-              case 0x8004: // Set VX += VY, VF is set to 1 when there's a
-                           // carry, and to 0 when there isn't
-                if ((mV[x] + mV[y]) > 0xFF) // Since each register is 8 bits...
+              case 0x8004:                  // Set VX += VY
+                if ((mV[x] + mV[y]) > 0xFF) // Set VF to 1 if there's a carry
                   mV[0xF] = 1;
 
                 mV[x] += mV[y];
                 break;
-              case 0x8005: // Set VX -= VY
-                if (mV[y] > mV[x]) //Set VF to 0 if there's a borrow
+              case 0x8005:         // Set VX -= VY
+                if (mV[y] > mV[x]) // Set VF to 0 if there's a borrow
                   mV[0xF] = 0;
 
                 mV[x] -= mV[y];
@@ -299,8 +298,8 @@ CPU::Execute()
                 // TODO: V[0xF] = LSB of VY (but remember BIG ENDIAN !!)
                 mV[x] = mV[y] >> 1;
                 break;
-              case 0x8007: // Set VX = VY - VX
-                if (mV[x] > mV[y]) //Set VF to 0 if there's a borrow
+              case 0x8007:         // Set VX = VY - VX
+                if (mV[x] > mV[y]) // Set VF to 0 if there's a borrow
                   mV[0xF] = 0;
 
                 mV[x] = mV[y] - mV[x];
