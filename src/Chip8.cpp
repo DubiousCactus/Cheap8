@@ -92,7 +92,7 @@ Chip8::Load(const char* file_name)
 	uint8_t* bytes;
 	/* Read file size */
 	fseek(file, 0, SEEK_END);
-	long file_size = ftell(file);
+	size_t file_size = ftell(file);
 	rewind(file);
 
 	/* Read the whole file as a block */
