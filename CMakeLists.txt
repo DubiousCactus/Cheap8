@@ -1,18 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
 project(Cheap8)
 
+if(UNIX)
+        set(CMAKE_CXX_FLAGS "-g3 -Wall -O0")
+endif ()
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-include_directories(.)
+include_directories(${Cheap8_SOURCE_DIR}/src)
 
-add_executable(Cheap8
-        Chip8.cpp
-        Chip8.h
-        CPU.cpp
-        CPU.h
-        main.cpp
-        Memory.cpp
-        Memory.h
-        Stack.cpp
-        Stack.h)
+file(GLOB Cheap8_SOURCES src/*)
+
+add_executable(Cheap8 ${Cheap8_SOURCES})

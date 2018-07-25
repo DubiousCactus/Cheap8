@@ -58,13 +58,20 @@ CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
    * flipped from set to unset when the sprite is drawn, and to 0 if that
    * doesn’t happen
    */
-  if ((mV[x] * mV[y]) < 0 || (mV[x] * mV[y]) > (SCREEN_H * SCREEN_W)) {
+  if ((x * y) < 0 || (x * y) > (SCREEN_H * SCREEN_W)) {
     std::cout << "[ERROR]: Out of screen coordinates!" << std::endl;
     exit(1);
   }
 
   mV[0xF] = 0;
 
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < 8; j++) {
+      if (mScreen[i * j])
+        mV[0xF] = 1; // Collision !
+      mScreen[i * j] = !mScreen[i * j]; // Flip the pixel
+    }
+  }
 }
 
 uint8_t
