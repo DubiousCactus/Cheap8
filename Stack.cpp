@@ -1,31 +1,37 @@
 /*
- * Stack.cpp
- * Copyright (C) 2018 transpalette <transpalette@translaptop>
+ * mStack.cpp
+ * Copyright (C) 2018 transpalette <transpalette@translapmTop>
  *
  * Distributed under terms of the MIT license.
  */
 
+#include "Stack.h"
 #include <cstdio>
 #include <cstring>
-#include "Stack.h"
 
-
-Stack::Stack() {
-	top = 0;
-	memset(stack, 0, STACK_SIZE);
-	sp = 0;
+Stack::Stack()
+{
+    mTop = 0;
+    memset(mStack, 0, STACK_SIZE);
+    mSp = 0;
 }
 
-uint16_t Stack::pop() {
-	return stack[top];
+uint16_t
+Stack::Pop()
+{
+    return mStack[mTop];
 }
 
-uint16_t Stack::push(uint8_t byte) {
-	//TODO
-	return 0x0;
+uint16_t
+Stack::Push(uint8_t byte)
+{
+    // TODO
+    return 0x0;
 }
 
-uint16_t Stack::fetch() {
-	printf("[*] Fetching byte from the stack (SP=%02X)\n", sp);
-	return stack[sp];
+uint16_t
+Stack::Fetch()
+{
+    printf("[*] Fetching byte from the stack (SP=%02X)\n", mSp);
+    return mStack[mSp];
 }

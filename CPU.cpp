@@ -65,7 +65,6 @@ CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
 
   mV[0xF] = 0;
 
-  mScreen[mV[x] * mV[y]] =
 }
 
 uint8_t
