@@ -1,2 +1,4 @@
-# Cheap8
+# [WIP]  Cheap8
 CHIP-8 emulator written in C++ for learning and having fun.
+
+More to come...
