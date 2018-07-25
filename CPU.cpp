@@ -75,28 +75,28 @@ void CPU::setDelay(uint8_t value) { delay_timer = value; }
 
 void CPU::setSoundTimer(uint8_t value) { sound_timer = value; }
 
-uint16_t *CPU::getSpriteAddr(uint8_t register) {
+uint16_t CPU::getSpriteAddr(uint8_t register) {
   // TODO
   return 0x000;
 }
 
 /* Store V0 to VX (r - included) in memory, starting at address I */
-void CPU::dumpRegisters(int r_offset, uint16_t *addr) {
+void CPU::dumpRegisters(int r_offset, uint16_t addr) {
  	for (int i = 0; i <= r_offset; i++)
-		*(addr + i) = V[i];
+		ram->writeByte(addr + i, V[i]);
 }
 
 /* Fills V0 to VX (r - included) with values from memory starting at address I */
-void CPU::loadRegisters(int r_offset, uint16_t *addr) {
+void CPU::loadRegisters(int r_offset, uint16_t addr) {
 	for (int i = 0; i <= r_offset; i++)
-		V[i] = *(addr + i);
+		V[i] = ram->readByte(addr + i);
 }
 
 /* Stores the BCD representation of the given register into I */
 void CPU::setBCD(uint8_t r) {
-  *I = r / 100;
-  *(I + 1) = (r / 10) - *I;
-  *(I + 2) = r - (*I + *(I + 1));
+  ram->writeByte(I, r / 100);
+  ram->writeByte(I + 1, (r / 10) - ram->readByte(I));
+  ram->writeByte(I + 2, r - ram->readByte(I) + ram->readByte(I + 1));
 }
 
 void CPU::execute() {
@@ -132,7 +132,7 @@ void CPU::execute() {
     break;
   }
   case 0xA000: // Set I = NNN
-    I = (uint16_t *)(opcode & 0x0FFF);
+    I = opcode & 0x0FFF;
     break;
   case 0xB000: // Jump to NNN + V0
     PC = (opcode & 0x0FFF) + V[0];
@@ -193,7 +193,6 @@ void CPU::execute() {
       break;
     case 0x0033: // Store BCD of VX
       setBCD(V[x]);
-      //...
       break;
     case 0x0055: // Dump V0 to VX in memory (starting at I)
       dumpRegisters(V[x], I);
@@ -234,7 +233,7 @@ void CPU::execute() {
         break;
 
       case 0x5000:
-			case 0x8000:
+      case 0x8000:
       case 0x9000: // Refactor for 0x5XY0, 0x8XYN, 0x9XYN
       {
         short x = (opcode & 0x0F00) / 0x100, y = (opcode & 0x00F0) / 0x10;

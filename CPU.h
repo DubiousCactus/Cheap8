@@ -21,7 +21,7 @@ class CPU {
 private:
   /* V0-VF (4 bits index), 8-bit size each */
   uint8_t V[16];   // Registers
-  uint16_t *I;     // Address register, 16 bits wide
+  uint16_t I;     // Address register, 16 bits wide
   uint16_t PC;     // Program counter, 16 bits
   uint16_t opcode; // 2 bytes
   uint8_t screen[SCREEN_W * SCREEN_H];
@@ -38,9 +38,9 @@ private:
   uint8_t getKey();
   void setDelay(uint8_t value);
   void setSoundTimer(uint8_t value);
-  uint16_t *getSpriteAddr(uint8_t register);
-  void dumpRegisters(int r_offset, uint16_t *addr);
-  void loadRegisters(int r_offset, uint16_t *addr);
+  uint16_t getSpriteAddr(uint8_t register);
+  void dumpRegisters(int r_offset, uint16_t addr);
+  void loadRegisters(int r_offset, uint16_t addr);
   void setBCD(uint8_t register);
 
 public:
