@@ -8,6 +8,7 @@
 #include "Chip8.h"
 #include <cstdio>
 #include <cstdlib>
+#include <thread>
 #include <iostream>
 
 Chip8::Chip8()
@@ -71,7 +72,8 @@ Chip8::Run()
     if (!mRunning) {
 	mRunning = true;
 	/* Start the mainLoop thread */
-	MainLoop();
+	std::thread tMainLoop(&Chip8::MainLoop, this);
+	tMainLoop.join();
     } else {
 	return;
     }
