@@ -54,14 +54,6 @@ CPU::ClearScreen()
 void
 CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
 {
-  // TODO
-  /* Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a
-   * height of N pixels. Each row of 8 pixels is read as bit-coded starting from
-   * memory location I; I value doesn’t change after the execution of this
-   * instruction. As described above, VF is set to 1 if any screen pixels are
-   * flipped from set to unset when the sprite is drawn, and to 0 if that
-   * doesn’t happen
-   */
   if ((x * y) < 0 || (x * y) > (SCREEN_H * SCREEN_W)) {
     std::cout << "[ERROR]: Out of screen coordinates!" << std::endl;
     exit(1);
@@ -70,10 +62,14 @@ CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
   mV[0xF] = 0;
 
   for (int i = 0; i < height; i++) {
-    for (int j = 0; j < 8; j++) {
-      if (mScreen[i * j])
-        mV[0xF] = 1;                    // Collision !
-      mScreen[i * j] = !mScreen[i * j]; // Flip the pixel
+    auto byte = mRam->ReadByte(mI + i);
+    for (int j = 0; j < 8; j++) { // Draw a row
+      auto mask = 1 << (8 - i);
+      if (byte & mask) { // Flip the pixel
+        if (mScreen[i * j] == 1)
+          mV[0xF] = 1; // Collision!
+        mScreen[i * j] ^= mScreen[i * j];
+      }
     }
   }
 }
