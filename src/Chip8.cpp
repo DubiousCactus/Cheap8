@@ -6,6 +6,8 @@
  */
 
 #include "Chip8.h"
+#include "Timer.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <thread>
@@ -56,13 +58,17 @@ Chip8::SetKeys()
 void
 Chip8::MainLoop()
 {
-
-    /* Run this inside a thread */
+    Timer cpuTimer;
+    cpuTimer.Start();
     while (this->mRunning) {
-	Cycle();
-	DrawGraphics();
-	SetKeys();
+	if (cpuTimer.ElpasedMilliseconds() >= 16) {
+	    Cycle();
+	    DrawGraphics();
+	    SetKeys();
+	    cpuTimer.Reset();
+	}
     }
+    cpuTimer.Stop();
 }
 
 void
@@ -74,8 +80,6 @@ Chip8::Run()
 	/* Start the mainLoop thread */
 	std::thread tMainLoop(&Chip8::MainLoop, this);
 	tMainLoop.join();
-    } else {
-	return;
     }
 }
 

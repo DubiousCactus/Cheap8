@@ -20,6 +20,7 @@ class Timer
   public:
     void Start();
     void Stop();
+	void Reset();
     double ElapsedSeconds();
     double ElpasedMilliseconds();
 };

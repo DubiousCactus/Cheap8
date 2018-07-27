@@ -21,6 +21,12 @@ Timer::Stop()
     mRunning = false;
 }
 
+void
+Timer::Reset()
+{
+	mStartTime = std::chrono::system_clock::now();
+}
+
 double
 Timer::ElpasedMilliseconds()
 {
