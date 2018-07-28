@@ -8,7 +8,7 @@
 #include "Keyboard.h"
 
 #include <thread>
-#include <cstdio>
+#include <ncurses.h>
 
 Keyboard* Keyboard::mInstance = nullptr;
 
@@ -45,9 +45,19 @@ void
 Keyboard::ListenerThread()
 {
 	while (mListening) {
-		int c = getchar();
+		int c = getch();
 		printf("[DEBUG] Reading %c from keyboard\n", c);
 		switch (c) {
+			case ERR: // No input
+				break;
+			case 'W':
+				break;
+			case 'A':
+				break;
+			case 'S':
+				break;
+			case 'D':
+				break;
 		}
 	}
 }
@@ -56,6 +66,7 @@ void
 Keyboard::StartListening()
 {
 	if (!mListening) {
+		nodelay(stdscr, TRUE);
 		mListening = true;
 		std::thread tListener(&Keyboard::ListenerThread, this);
 		tListener.join();

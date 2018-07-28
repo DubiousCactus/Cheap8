@@ -9,6 +9,7 @@
 #include "Keyboard.h"
 #include "Timer.h"
 
+#include <curses.h>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -19,18 +20,25 @@ Chip8::Chip8()
     mRunning = false;
     mCpu = new CPU();
     mRam = Memory::GetInstance();
+    Init();
 }
 
 Chip8::~Chip8()
 {
+    endwin();
     delete mCpu;
-    delete mRam; // Is this safe ?
+    delete mRam;
 }
 
 void
 Chip8::Init()
 {
     /* Init fonts ? */
+
+    /* ncurses */
+    initscr();
+    cbreak();
+    noecho();
 }
 
 void
@@ -59,6 +67,7 @@ void
 Chip8::DrawGraphics()
 {
     // Write the pixels array using ncurses
+    wrefresh(stdscr);
 }
 
 void

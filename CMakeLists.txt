@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(Cheap8)
 
 if(UNIX)
-        set(CMAKE_CXX_FLAGS "-g3 -Wall -O4 -pthread")
+        set(CMAKE_CXX_FLAGS "-g3 -Wall -O4 -pthread -lncurses")
 endif ()
 
 set(CMAKE_CXX_STANDARD 11)

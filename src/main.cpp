@@ -11,8 +11,6 @@
 int
 main(int argc, char** argv)
 {
-
-    printf("*****CHEAP 8 EMULATOR*****\n");
     if (argc < 2) {
         printf("Usage: %s <chip8_game_image>\n\n", argv[0]);
         return 0;
@@ -20,7 +18,6 @@ main(int argc, char** argv)
 
     printf("Loading: %s ...\n", argv[1]);
     Chip8 cheap8 = Chip8();
-    cheap8.Init();
     cheap8.Load(argv[1]);
     cheap8.Run();
 
