@@ -14,8 +14,8 @@
 CPU::CPU()
 {
   srand((unsigned)time(NULL));
-  memset(mV, 0, 16);
-  memset(mScreen, 0, SCREEN_H * SCREEN_W);
+  memset(mV, 0, 16 * sizeof(uint8_t));
+  memset(mScreen, 0, SCREEN_H * SCREEN_W * sizeof(uint8_t));
   mStack = new Stack();
   mRam = Memory::GetInstance();
   mI = 0;
@@ -41,14 +41,12 @@ CPU::Step()
     mPC += 2;
   else
     mJMP = false;
-  // TODO: Use a timer to slow the CPU down till it's playable (what's the
-  // reference ?)
 }
 
 void
 CPU::ClearScreen()
 {
-  memset(mScreen, 0, SCREEN_H * SCREEN_W);
+  memset(mScreen, 0, SCREEN_H * SCREEN_W * sizeof(uint8_t));
 }
 
 void
