@@ -18,6 +18,8 @@ class Chip8
   private:
     bool mRunning;
     uint8_t mKey[16]; // Hex based keypad
+    uint8_t mDelay_timer;
+    uint8_t mSound_timer;
     CPU* mCpu;
     Memory* mRam;
 
@@ -26,6 +28,7 @@ class Chip8
     ~Chip8();
     void Init();
     void Cycle();
+    void UpdateTimers();
     void DrawGraphics();
     void SetKeys();
     void MainLoop();

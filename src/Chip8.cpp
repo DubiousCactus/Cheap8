@@ -10,8 +10,8 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <thread>
 #include <iostream>
+#include <thread>
 
 Chip8::Chip8()
 {
@@ -40,13 +40,28 @@ Chip8::Cycle()
     printf("[*] Running one cycle\n");
     mCpu->Step();
     std::cin.get();
-    /* Update timers */
+}
+
+void
+Chip8::UpdateTimers()
+{
+    Timer chip8Timers;
+    chip8Timers.Start();
+    while (this->mRunning) {
+	if (chip8Timers.ElpasedMilliseconds() >= 16) {
+	    if (mDelay_timer > 0)
+		mDelay_timer--;
+	    if (mSound_timer > 0)
+		mSound_timer--;
+	}
+    }
+    chip8Timers.Stop();
 }
 
 void
 Chip8::DrawGraphics()
 {
-    // Write the pixels array
+    // Write the pixels array using ncurses
 }
 
 void
@@ -58,17 +73,18 @@ Chip8::SetKeys()
 void
 Chip8::MainLoop()
 {
-    Timer cpuTimer;
-    cpuTimer.Start();
+    Timer displayTimer;
+    displayTimer.Start();
     while (this->mRunning) {
-	if (cpuTimer.ElpasedMilliseconds() >= 16) {
-	    Cycle();
+	Cycle();
+	/* Try to refresh the screen at a 60Hz rate */
+	if (displayTimer.ElpasedMilliseconds() >= 16) {
 	    DrawGraphics();
-	    SetKeys();
-	    cpuTimer.Reset();
+	    displayTimer.Reset();
 	}
+	SetKeys();
     }
-    cpuTimer.Stop();
+    displayTimer.Stop();
 }
 
 void
@@ -80,6 +96,9 @@ Chip8::Run()
 	/* Start the mainLoop thread */
 	std::thread tMainLoop(&Chip8::MainLoop, this);
 	tMainLoop.join();
+	/* Start the timer thread */
+	std::thread tTimers(&Chip8::UpdateTimers, this);
+	tTimers.join();
     }
 }
 
