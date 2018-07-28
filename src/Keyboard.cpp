@@ -7,13 +7,30 @@
 
 #include "Keyboard.h"
 
-short
+Keyboard* Keyboard::mInstance = nullptr;
+
+uint8_t
 Keyboard::ReadKey()
 {
-    for (int i = 0; i < 16; i++) {
-		if (mKeys[i])
-			return i;
-    }
+	bool noKeyPress = true;
+	uint8_t key;
+	while (noKeyPress) {
+		for (int i = 0; i < 16; i++) {
+			if (Keyboard::mKeys[i]) {
+				key = i;
+				noKeyPress = false;
+			}
+		}
+	}
 
-    return -1;
+    return key;
+}
+
+Keyboard*
+Keyboard::GetInstance()
+{
+    if (!Keyboard::mInstance)
+		Keyboard::mInstance = new Keyboard();
+
+    return Keyboard::mInstance;
 }

@@ -13,7 +13,7 @@
 
 /* TODO: TAKE CARE OF THE ENDIANNESS PROBLEM */
 
-Memory* Memory::mInstance = 0;
+Memory* Memory::mInstance = nullptr;
 
 Memory::Memory()
 {

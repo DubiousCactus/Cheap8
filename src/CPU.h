@@ -10,6 +10,8 @@
 
 #include "Memory.h"
 #include "Stack.h"
+#include "Keyboard.h"
+
 #include <cstdint>
 
 #define SCREEN_W 64
@@ -27,6 +29,7 @@ private:
   uint16_t mOpcode; // 2 bytes
   uint8_t mScreen[SCREEN_W * SCREEN_H];
   Memory* mRam;  // TODO: use smart pointers
+  Keyboard* mKeyboard;
   Stack* mStack; // Must be at least of size 16
   uint8_t mDelay_timer;
   uint8_t mSound_timer;
@@ -36,7 +39,6 @@ private:
   void ClearScreen();
   void Draw(const uint8_t x, const uint8_t y, const uint8_t height);
   uint8_t GetDelay();
-  uint8_t GetKey();
   void SetDelay(uint8_t value);
   void SetSoundTimer(uint8_t value);
   uint16_t GetSpriteAddr(uint8_t r);

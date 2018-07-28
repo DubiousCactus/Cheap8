@@ -6,6 +6,7 @@
  */
 
 #include "CPU.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -18,6 +19,7 @@ CPU::CPU()
   memset(mScreen, 0, SCREEN_H * SCREEN_W * sizeof(uint8_t));
   mStack = new Stack();
   mRam = Memory::GetInstance();
+  mKeyboard = Keyboard::GetInstance();
   mI = 0;
   mPC = GAME_OFFSET;
   mOpcode = 0;
@@ -28,6 +30,7 @@ CPU::~CPU()
 {
   delete mStack;
   delete mRam;
+  delete mKeyboard;
 }
 
 void
@@ -76,13 +79,6 @@ uint8_t
 CPU::GetDelay()
 {
   return mDelay_timer;
-}
-
-uint8_t
-CPU::GetKey()
-{
-  // TODO: returns the pressed key
-  return 0;
 }
 
 void
@@ -213,7 +209,7 @@ CPU::Execute()
           mV[x] = GetDelay();
           break;
         case 0x000A: // Set VX = key press (blocking)
-          mV[x] = GetKey();
+          mV[x] = mKeyboard->ReadKey();
           break;
         case 0x0015: // Set delay timer = VX
           SetDelay(mV[x]);

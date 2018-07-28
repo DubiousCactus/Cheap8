@@ -14,10 +14,14 @@ class Keyboard
 {
 
   private:
-    bool mKeys[16];
+	bool mKeys[16];
+	static Keyboard* mInstance;
+	Keyboard();
 
   public:
-    short ReadKey();
+	~Keyboard();
+    uint8_t ReadKey();
+	static Keyboard* GetInstance();
 };
 
 #endif /* !KEYBOARD_H */
