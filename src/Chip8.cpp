@@ -9,7 +9,6 @@
 #include "Keyboard.h"
 #include "Timer.h"
 
-#include <curses.h>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -39,6 +38,7 @@ Chip8::Init()
     initscr();
     cbreak();
     noecho();
+    mWindow = newwin(SCREEN_H, SCREEN_W, 0, 0);
 }
 
 void
@@ -67,7 +67,12 @@ void
 Chip8::DrawGraphics()
 {
     // Write the pixels array using ncurses
-    wrefresh(stdscr);
+    for (int x = 0; x < SCREEN_W; x++) {
+	for (int y = 0; y < SCREEN_H; y++) {
+	    mvwaddch(mWindow, x, y, '#');
+	}
+    }
+    wrefresh(mWindow);
 }
 
 void
