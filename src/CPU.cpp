@@ -188,10 +188,12 @@ CPU::Execute()
 
       switch (mOpcode & 0xF0FF) {
         case 0xE09E: // Skip next instruction if the key in VX is pressed
-          // TODO
+          if (mKeyboard->IsKeyPressed(x))
+            mPC += 2;
           break;
         case 0xE0A1: // Skip next instruction if the key in VX isn't pressed
-          // TODO
+          if (!mKeyboard->IsKeyPressed(x))
+            mPC += 2;
           break;
       }
       break;

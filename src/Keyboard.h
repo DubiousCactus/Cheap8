@@ -26,6 +26,7 @@ class Keyboard
 	static Keyboard* GetInstance();
 	void StartListening();
 	void StopListening();
+	bool IsKeyPressed(uint8_t x);
 };
 
 #endif /* !KEYBOARD_H */

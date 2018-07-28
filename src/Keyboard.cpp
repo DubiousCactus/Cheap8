@@ -66,6 +66,12 @@ Keyboard::StopListening()
 	mListening = false;
 }
 
+bool
+Keyboard::IsKeyPressed(uint8_t x)
+{
+	return mKeys[x];
+}
+
 Keyboard*
 Keyboard::GetInstance()
 {
