@@ -7,6 +7,7 @@
 
 #include "Chip8.h"
 #include "Timer.h"
+#include "Keyboard.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -29,7 +30,6 @@ Chip8::~Chip8()
 void
 Chip8::Init()
 {
-    /* Init registers and memory */
     /* Init fonts ? */
 }
 
@@ -72,6 +72,7 @@ Chip8::MainLoop()
 {
     Timer displayTimer;
     displayTimer.Start();
+    Keyboard::GetInstance()->StartListening();
     while (this->mRunning) {
 	Cycle();
 	/* Try to refresh the screen at a 60Hz rate */
@@ -82,6 +83,7 @@ Chip8::MainLoop()
 	SetKeys();
     }
     displayTimer.Stop();
+    Keyboard::GetInstance()->StopListening();
 }
 
 void

@@ -7,7 +7,20 @@
 
 #include "Keyboard.h"
 
+#include <thread>
+#include <cstdio>
+
 Keyboard* Keyboard::mInstance = nullptr;
+
+Keyboard::Keyboard()
+{
+	mListening = false;
+}
+
+Keyboard::~Keyboard()
+{
+	delete mInstance;
+}
 
 uint8_t
 Keyboard::ReadKey()
@@ -24,6 +37,33 @@ Keyboard::ReadKey()
 	}
 
     return key;
+}
+
+void
+Keyboard::ListenerThread()
+{
+	while (mListening) {
+		int c = getchar();
+		printf("[DEBUG] Reading %c from keyboard\n", c);
+		switch (c) {
+		}
+	}
+}
+
+void
+Keyboard::StartListening()
+{
+	if (!mListening) {
+		mListening = true;
+		std::thread tListener(&Keyboard::ListenerThread, this);
+		tListener.join();
+	}
+}
+
+void
+Keyboard::StopListening()
+{
+	mListening = false;
 }
 
 Keyboard*
