@@ -133,6 +133,15 @@ CPU::SetBCD(uint8_t r)
 }
 
 void
+CPU::UpdateTimers()
+{
+  if (mDelay_timer > 0)
+    mDelay_timer--;
+  if (mSound_timer > 0)
+    mSound_timer--;
+}
+
+void
 CPU::Execute()
 {
   printf("[*] Executing opcode: 0x%02X\n", mOpcode);

@@ -49,10 +49,7 @@ Chip8::UpdateTimers()
     chip8Timers.Start();
     while (this->mRunning) {
 	if (chip8Timers.ElpasedMilliseconds() >= 16) {
-	    if (mDelay_timer > 0)
-		mDelay_timer--;
-	    if (mSound_timer > 0)
-		mSound_timer--;
+	    mCpu->UpdateTimers();
 	}
     }
     chip8Timers.Stop();

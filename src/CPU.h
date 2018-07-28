@@ -48,6 +48,7 @@ public:
   CPU();
   ~CPU();
   void Step();
+  void UpdateTimers();
 };
 
 #endif /* !CPU_H */
