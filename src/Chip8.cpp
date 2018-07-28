@@ -6,8 +6,8 @@
  */
 
 #include "Chip8.h"
-#include "Timer.h"
 #include "Keyboard.h"
+#include "Timer.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -62,12 +62,6 @@ Chip8::DrawGraphics()
 }
 
 void
-Chip8::SetKeys()
-{
-    /* meh */
-}
-
-void
 Chip8::MainLoop()
 {
     Timer displayTimer;
@@ -80,7 +74,6 @@ Chip8::MainLoop()
 	    DrawGraphics();
 	    displayTimer.Reset();
 	}
-	SetKeys();
     }
     displayTimer.Stop();
     Keyboard::GetInstance()->StopListening();

@@ -30,7 +30,6 @@ class Chip8
     void Cycle();
     void UpdateTimers();
     void DrawGraphics();
-    void SetKeys();
     void MainLoop();
     void Run();
     void Stop();
