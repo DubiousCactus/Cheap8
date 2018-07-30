@@ -8,6 +8,7 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+#include <ncurses.h>
 #include <cstdint>
 
 class Keyboard
@@ -16,6 +17,7 @@ class Keyboard
   private:
 	bool mKeys[16];
 	bool mListening;
+	WINDOW* mWindow;
 	static Keyboard* mInstance;
 	Keyboard();
 	void ListenerThread();
@@ -24,7 +26,7 @@ class Keyboard
 	~Keyboard();
     uint8_t ReadKey();
 	static Keyboard* GetInstance();
-	void StartListening();
+	void StartListening(WINDOW* win);
 	void StopListening();
 	bool IsKeyPressed(uint8_t x);
 };

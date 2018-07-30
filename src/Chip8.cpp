@@ -19,7 +19,7 @@ Chip8::Chip8()
     mRunning = false;
     mCpu = new CPU();
     mRam = Memory::GetInstance();
-    Init();
+    //Init();
 }
 
 Chip8::~Chip8()
@@ -80,12 +80,12 @@ Chip8::MainLoop()
 {
     Timer displayTimer;
     displayTimer.Start();
-    Keyboard::GetInstance()->StartListening();
+    Keyboard::GetInstance()->StartListening(mWindow);
     while (this->mRunning) {
 	Cycle();
 	/* Try to refresh the screen at a 60Hz rate */
 	if (displayTimer.ElpasedMilliseconds() >= 16) {
-	    DrawGraphics();
+	    //DrawGraphics();
 	    displayTimer.Reset();
 	}
     }
@@ -100,11 +100,9 @@ Chip8::Run()
     if (!mRunning) {
 	mRunning = true;
 	/* Start the mainLoop thread */
-	std::thread tMainLoop(&Chip8::MainLoop, this);
-	tMainLoop.join();
+	std::thread(&Chip8::MainLoop, this).join();
 	/* Start the timer thread */
-	std::thread tTimers(&Chip8::UpdateTimers, this);
-	tTimers.join();
+	std::thread(&Chip8::UpdateTimers, this).join();
     }
 }
 
@@ -119,28 +117,31 @@ void
 Chip8::Load(const char* file_name)
 {
     FILE* file = fopen(file_name, "rb");
-    if (file != NULL) {
-	uint8_t* bytes;
-	/* Read file size */
-	fseek(file, 0, SEEK_END);
-	size_t file_size = ftell(file);
-	rewind(file);
-
-	/* Read the whole file as a block */
-	bytes = (uint8_t*)malloc(sizeof(uint8_t) * file_size);
-	size_t size_read = fread(bytes, 1, file_size, file);
-
-	if (size_read != file_size) {
-	    printf("[!] ERROR: could not read %s\n", file_name);
-	    exit(1);
-	}
-
-	if (!mRam->WriteBytes(0x200, size_read, bytes)) {
-	    printf("[!] ERROR: could not write the game in the RAM\n");
-	    exit(1);
-	}
-
-	fclose(file);
-	free(bytes);
+    if (file == nullptr) {
+	std::cout << "[!] ERROR: Could not open '" << file_name << "'" << std::endl;
+	exit(1);
     }
+
+    uint8_t* bytes;
+    /* Read file size */
+    fseek(file, 0, SEEK_END);
+    size_t file_size = ftell(file);
+    rewind(file);
+
+    /* Read the whole file as a block */
+    bytes = (uint8_t*)malloc(sizeof(uint8_t) * file_size);
+    size_t size_read = fread(bytes, 1, file_size, file);
+
+    if (size_read != file_size) {
+	printf("[!] ERROR: could not read %s\n", file_name);
+	exit(1);
+    }
+
+    if (!mRam->WriteBytes(0x200, size_read, bytes)) {
+	printf("[!] ERROR: could not write the game in the RAM\n");
+	exit(1);
+    }
+
+    fclose(file);
+    free(bytes);
 }

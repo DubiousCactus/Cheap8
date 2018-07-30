@@ -45,8 +45,8 @@ void
 Keyboard::ListenerThread()
 {
 	while (mListening) {
-		int c = getch();
-		printf("[DEBUG] Reading %c from keyboard\n", c);
+		nodelay(mWindow, TRUE); // <- de-blocking
+		int c = getch(); // Blocking!
 		switch (c) {
 			case ERR: // No input
 				break;
@@ -63,13 +63,12 @@ Keyboard::ListenerThread()
 }
 
 void
-Keyboard::StartListening()
+Keyboard::StartListening(WINDOW* win)
 {
 	if (!mListening) {
-		nodelay(stdscr, TRUE);
 		mListening = true;
-		std::thread tListener(&Keyboard::ListenerThread, this);
-		tListener.join();
+		mWindow = win;
+		std::thread(&Keyboard::ListenerThread, this).detach();
 	}
 }
 
