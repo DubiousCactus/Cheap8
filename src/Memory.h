@@ -12,7 +12,7 @@
 #include <cstdint>
 
 #define MEMORY_SIZE 0x1000
-#define FONTS_OFFSET 0x050
+#define FONTS_OFFSET 0
 #define GAME_OFFSET 0x200
 
 class Memory

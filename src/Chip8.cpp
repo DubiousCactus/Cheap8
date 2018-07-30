@@ -74,18 +74,18 @@ Chip8::MainLoop()
 {
     Timer displayTimer, cpuTimer;
     displayTimer.Start();
-    cpuTimer.Start();
+    //cpuTimer.Start();
     Keyboard::GetInstance()->StartListening();
     while (this->mRunning) {
 	/* Run the CPU at 4MHz */
-	if (cpuTimer.ElapsedNanoseconds() >= 250) {
+	//if (cpuTimer.ElapsedNanoseconds() >= 250) {
 	    /* Run next instruction */
 	    mCpu->Step();
-	    cpuTimer.Reset();
-	}
+	    //cpuTimer.Reset();
+	//}
 	/* Try to refresh the screen at a 60Hz rate */
-	if (displayTimer.ElapsedMilliseconds() >= 16) {
-	    mScreen->Draw();
+	if (displayTimer.ElapsedMilliseconds() >= 160) {
+	    //mScreen->Draw();
 	    displayTimer.Reset();
 	}
     }
@@ -102,7 +102,7 @@ Chip8::Run()
 	/* Start the mainLoop thread */
 	std::thread(&Chip8::MainLoop, this).join();
 	/* Start the timer thread */
-	std::thread(&Chip8::UpdateTimers, this).join();
+	//std::thread(&Chip8::UpdateTimers, this).join();
     }
 }
 

@@ -7,6 +7,7 @@
 
 #include "Keyboard.h"
 #include "Screen.h"
+#include "Timer.h"
 
 #include <ncurses.h>
 #include <thread>
@@ -45,14 +46,23 @@ Keyboard::ReadKey()
 void
 Keyboard::ListenerThread()
 {
+    Timer timer;
     while (mListening) {
-	for (int i = 0; i < 16; i++)
-	    mKeys[i] = false;
+	for (int i = 0; i < 16; i++) {
+	    if ((mKeys[i] && timer.ElapsedMilliseconds() >= 300)) {
+		mKeys[i] = false;
+		timer.Stop();
+		timer.Reset();
+	    }
+	}
+	
 	int c = getch();
 	std::string mapping("0123456789ABCDEF");
 	if (c != ERR) {
-	    if (mapping.find(c) >= 0 && mapping.find(c) <= 'F')
+	    if (mapping.find(c) >= 0) {
 		mKeys[mapping.find(c)] = true;
+		timer.Start();
+	    }
 	}
     }
 }
