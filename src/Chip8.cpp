@@ -17,28 +17,23 @@
 Chip8::Chip8()
 {
     mRunning = false;
-    mCpu = new CPU();
+    mScreen = Screen::GetInstance();
     mRam = Memory::GetInstance();
-    //Init();
+    mCpu = new CPU();
+    Init();
 }
 
 Chip8::~Chip8()
 {
-    endwin();
     delete mCpu;
     delete mRam;
+    delete mScreen;
 }
 
 void
 Chip8::Init()
 {
     /* Init fonts ? */
-
-    /* ncurses */
-    initscr();
-    cbreak();
-    noecho();
-    mWindow = newwin(SCREEN_H, SCREEN_W, 0, 0);
 }
 
 void
@@ -68,12 +63,12 @@ Chip8::MainLoop()
 {
     Timer displayTimer;
     displayTimer.Start();
-    //Keyboard::GetInstance()->StartListening(mWindow);
+    Keyboard::GetInstance()->StartListening();
     while (this->mRunning) {
 	Cycle();
 	/* Try to refresh the screen at a 60Hz rate */
 	if (displayTimer.ElpasedMilliseconds() >= 16) {
-	    //DrawGraphics();
+	    mScreen->Draw();
 	    displayTimer.Reset();
 	}
     }

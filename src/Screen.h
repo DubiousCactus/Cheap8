@@ -25,10 +25,10 @@ class Screen
   public:
 	~Screen();
     static Screen* GetInstance();
-    void SetWindow(WINDOW* win);
     bool TogglePixel(const uint8_t x, const uint8_t y);
     void Draw();
 	void Clear();
+	WINDOW* GetHandle();
 };
 
 #endif /* !SCREEN_H */

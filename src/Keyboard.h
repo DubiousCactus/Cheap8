@@ -26,7 +26,7 @@ class Keyboard
 	~Keyboard();
     uint8_t ReadKey();
 	static Keyboard* GetInstance();
-	void StartListening(WINDOW* win);
+	void StartListening();
 	void StopListening();
 	bool IsKeyPressed(uint8_t x);
 };

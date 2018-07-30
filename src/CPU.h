@@ -11,12 +11,9 @@
 #include "Memory.h"
 #include "Stack.h"
 #include "Keyboard.h"
+#include "Screen.h"
 
 #include <cstdint>
-
-#define SCREEN_W 64
-#define SCREEN_H 32
-#define GAME_OFFSET 0x200
 
 class CPU
 {
@@ -27,10 +24,10 @@ private:
   uint16_t mI;      // Address register, 16 bits wide
   uint16_t mPC;     // Program counter, 16 bits
   uint16_t mOpcode; // 2 bytes
-  uint8_t mScreen[SCREEN_W][SCREEN_H];
   Memory* mRam;  // TODO: use smart pointers
   Keyboard* mKeyboard;
   Stack* mStack; // Must be at least of size 16
+  Screen* mScreen;
   uint8_t mDelay_timer;
   uint8_t mSound_timer;
   bool mJMP;

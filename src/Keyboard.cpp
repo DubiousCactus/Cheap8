@@ -6,6 +6,7 @@
  */
 
 #include "Keyboard.h"
+#include "Screen.h"
 
 #include <thread>
 #include <ncurses.h>
@@ -67,11 +68,11 @@ Keyboard::ListenerThread()
 }
 
 void
-Keyboard::StartListening(WINDOW* win)
+Keyboard::StartListening()
 {
 	if (!mListening) {
 		mListening = true;
-		mWindow = win;
+		mWindow = Screen::GetInstance()->GetHandle();
 		std::thread(&Keyboard::ListenerThread, this).detach();
 	}
 }

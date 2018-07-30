@@ -10,8 +10,8 @@
 
 #include "CPU.h"
 #include "Memory.h"
+#include "Screen.h"
 
-#include <ncurses.h>
 #include <cstdint>
 
 class Chip8
@@ -24,9 +24,8 @@ class Chip8
     uint8_t mSound_timer;
     CPU* mCpu;
     Memory* mRam;
-    WINDOW* mWindow;
+    Screen* mScreen;
     void UpdateTimers();
-    void DrawGraphics();
     void Init();
     void Cycle();
 

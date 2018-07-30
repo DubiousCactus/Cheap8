@@ -16,7 +16,6 @@ CPU::CPU()
 {
   srand((unsigned)time(NULL));
   memset(mV, 0, 16 * sizeof(uint8_t));
-  memset(mScreen, 0, SCREEN_H * SCREEN_W * sizeof(uint8_t));
   mStack = new Stack();
   mRam = Memory::GetInstance();
   mKeyboard = Keyboard::GetInstance();
@@ -31,6 +30,7 @@ CPU::~CPU()
   delete mStack;
   delete mRam;
   delete mKeyboard;
+  delete mScreen;
 }
 
 void
@@ -47,15 +47,9 @@ CPU::Step()
 }
 
 void
-CPU::ClearScreen()
-{
-  memset(mScreen, 0, SCREEN_H * SCREEN_W * sizeof(uint8_t));
-}
-
-void
 CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
 {
-  if (x < 0 || x > SCREEN_W || y < 0 || y > SCREEN_H) {
+  if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) {
     printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
     //exit(1);
     return;
@@ -68,9 +62,8 @@ CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
     for (int j = 0; j < 8; j++) { // Draw a row
       auto mask = 1 << (8 - i);
       if (byte & mask) { // Flip the pixel
-        if (mScreen[i][j] == 1)
+        if (mScreen->TogglePixel(i, j))
           mV[0xF] = 1; // Collision!
-        mScreen[i][j] ^= mScreen[i][j];
       }
     }
   }

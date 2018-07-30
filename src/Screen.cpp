@@ -13,10 +13,19 @@ Screen* Screen::mInstance = nullptr;
 
 Screen::Screen()
 {
+    /* ncurses */
+    initscr();
+    cbreak();
+    noecho();
+    /* Clear the buffer */
     Clear();
+    mWindow = newwin(SCREEN_HEIGHT, SCREEN_WIDTH, 0, 0);
 }
 
-Screen::~Screen() {}
+Screen::~Screen()
+{
+    endwin();
+}
 
 Screen*
 Screen::GetInstance()
@@ -31,12 +40,6 @@ void
 Screen::Clear()
 {
     memset(mBuffer, 0, SCREEN_HEIGHT * SCREEN_WIDTH * sizeof(uint8_t));
-}
-
-void
-Screen::SetWindow(WINDOW* win)
-{
-    mWindow = win;
 }
 
 bool
@@ -57,4 +60,10 @@ Screen::Draw()
 		}
     }
     wrefresh(mWindow);
+}
+
+WINDOW*
+Screen::GetHandle()
+{
+    return mWindow;
 }
