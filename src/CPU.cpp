@@ -147,9 +147,9 @@ CPU::Execute()
 
   switch (mOpcode & 0xF000) {
     case 0x0000:
-      switch (mOpcode & 0x000F) {
+      switch (mOpcode & 0x000F) { // Clear the screen
         case 0x00E0:
-          ClearScreen();
+          mScreen->Clear();
           break;
         case 0x00EE: // Return from subroutine.
           mPC = mStack->Pop();
@@ -177,7 +177,7 @@ CPU::Execute()
     case 0xC000: // Set VX = NN & random()
       mV[(mOpcode & 0x0F00) >> 8] =
         (rand() % 255) &
-        (mOpcode & 0x00FF); // TODO: Make sure this is done right!
+        (mOpcode & 0x00FF);
       break;
     case 0xD000: // Draw a sprite at (VX, VY), that has a width of 8 pixels and
                  // a height of N pixels
@@ -303,31 +303,24 @@ CPU::Execute()
                 mV[x] = (mV[x] ^ mV[y]);
                 break;
               case 0x8004:                  // Set VX += VY
-                if ((mV[x] + mV[y]) > 0xFF) // Set VF to 1 if there's a carry
-                  mV[0xF] = 1;
-
+                mV[0xF] = ((mV[x] + mV[y]) > 0xFF); // Set VF to 1 if there's a carry
                 mV[x] += mV[y];
                 break;
               case 0x8005:         // Set VX -= VY
-                if (mV[y] > mV[x]) // Set VF to 0 if there's a borrow
-                  mV[0xF] = 0;
-
+                mV[0xF] = mV[x] > mV[y]; // Set VF to 0 if there's a borrow
                 mV[x] -= mV[y];
                 break;
-              case 0x8006: // Shift Vx = Vy >> 1
-                // TODO: V[0xF] = LSB of VY (but remember BIG ENDIAN !!)
-                mV[x] = mV[y] >> 1;
+              case 0x8006: // Shift Vx = Vx >> 1 (// TODO: Verify that it's not Vx = Vy >> 1)
+                mV[0xF] = mV[x] & 0x01;
+                mV[x] >>= 1;
                 break;
               case 0x8007:         // Set VX = VY - VX
-                if (mV[x] > mV[y]) // Set VF to 0 if there's a borrow
-                  mV[0xF] = 0;
-
+                mV[0xF] = mV[x] < mV[y]; // Set VF to 0 if there's a borrow
                 mV[x] = mV[y] - mV[x];
                 break;
-              case 0x800E: // Shift and set Vx = Vy = Vy << 1
-                // TODO: mV[0xF] = MSB of V[y] (remember BIG ENDIAND)
-                mV[y] <<= 1;
-                mV[x] = mV[y];
+              case 0x800E: // Shift and set Vx = Vx << 1
+                mV[0xF] = ((mV[x] & 0x80) != 0);
+                mV[x] <<= 1;
                 break;
               case 0x9000: // Skips the next instruction if VX != VY
                 if (mV[x] != mV[y])

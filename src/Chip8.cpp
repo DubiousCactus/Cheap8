@@ -52,7 +52,7 @@ Chip8::Init()
 	0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
 	0xF0, 0x80, 0xF0, 0x80, 0x80 // F
     };
-    mRam->WriteBytes(0x050, sizeof(fonts)/sizeof(fonts[0]), fonts);
+    mRam->WriteBytes(0x000, sizeof(fonts)/sizeof(uint8_t), fonts);
 }
 
 void
