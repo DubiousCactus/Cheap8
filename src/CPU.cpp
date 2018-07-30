@@ -51,7 +51,7 @@ void
 CPU::Draw(uint8_t x, uint8_t y, const uint8_t height)
 {
   if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) {
-    printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
+    //printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
     //exit(1);
     if (x > SCREEN_WIDTH) {
       x -= SCREEN_WIDTH;
@@ -69,10 +69,10 @@ CPU::Draw(uint8_t x, uint8_t y, const uint8_t height)
   mV[0xF] = 0;
 
   for (int i = 0; i < height; i++) {
-    auto byte = mRam->ReadByte(mI + i);
+    auto sprite = mRam->ReadByte(mI + i);
     for (int j = 0; j < 8; j++) { // Draw a row
       auto mask = 1 << (8 - (j + 1));
-      if (byte & mask) { // Flip the pixel
+      if (sprite & mask) { // Flip the pixel
         if (mScreen->TogglePixel(x + j, y + i))
           mV[0xF] = 1; // Collision!
       }
@@ -151,8 +151,8 @@ CPU::Execute()
         case 0x00E0:
           ClearScreen();
           break;
-        case 0x00EE:
-          return; // Return from subroutine. What does that imply actually ??
+        case 0x00EE: // Return from subroutine.
+          mPC = mStack->Pop();
           break;
         default:
           break;

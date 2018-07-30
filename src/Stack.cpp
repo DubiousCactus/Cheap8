@@ -19,19 +19,26 @@ Stack::Stack()
 uint16_t
 Stack::Pop()
 {
-    return mStack[mTop];
+    uint16_t word = mStack[mTop];
+    mStack[mTop--] = 0;
+    if (mSp > mTop)
+        mSp = mTop;
+
+    return word;
 }
 
 uint16_t
-Stack::Push(uint8_t byte)
+Stack::Push(uint16_t word)
 {
-    // TODO
-    return 0x0;
+    mStack[++mTop] = word;
+
+    return mTop;
 }
 
 uint16_t
 Stack::Fetch()
 {
-    printf("[*] Fetching byte from the stack (SP=%02X)\n", mSp);
+    printf("[*] Fetching word from the stack (SP=%02X)\n", mSp);
+
     return mStack[mSp];
 }
