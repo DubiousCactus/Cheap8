@@ -51,7 +51,7 @@ void
 CPU::Draw(uint8_t x, uint8_t y, const uint8_t height)
 {
   if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) {
-    //printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
+    printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
     //exit(1);
     if (x > SCREEN_WIDTH) {
       x -= SCREEN_WIDTH;
@@ -99,25 +99,25 @@ CPU::SetSoundTimer(uint8_t value)
 }
 
 uint16_t
-CPU::GetSpriteAddr(uint8_t r)
+CPU::GetSpriteAddr(uint8_t character)
 {
-  return FONTS_OFFSET + (5 * r);
+  return FONTS_OFFSET + (5 * character);
 }
 
 /* Store V0 to VX (r - included) in memory, starting at address I */
 void
-CPU::DumpRegisters(int r_offset, uint16_t addr)
+CPU::DumpRegisters(int r_index, uint16_t addr)
 {
-  for (int i = 0; i <= r_offset; i++)
+  for (int i = 0; i <= r_index; i++)
     mRam->WriteByte(addr + i, mV[i]);
 }
 
 /* Fills V0 to VX (r - included) with values from RAM starting at address I
  */
 void
-CPU::LoadRegisters(int r_offset, uint16_t addr)
+CPU::LoadRegisters(int r_index, uint16_t addr)
 {
-  for (int i = 0; i <= r_offset; i++)
+  for (int i = 0; i <= r_index; i++)
     mV[i] = mRam->ReadByte(addr + i);
 }
 
@@ -180,10 +180,10 @@ CPU::Execute()
       break;
     case 0xD000: // Draw a sprite at (VX, VY), that has a width of 8 pixels and
                  // a height of N pixels
-      /*printf("DRAW: mV[%d]=%d - mV[%d]=%d -  H=%d\n",
+      printf("DRAW: mV[%d]=%d - mV[%d]=%d -  H=%d\n",
           (mOpcode & 0x0F00) >> 8, mV[(mOpcode & 0x0F00) >> 8],
           (mOpcode & 0x00F0) >> 4, mV[(mOpcode & 0x00F0) >> 4],
-          mOpcode & 0x000F);*/
+          mOpcode & 0x000F);
       Draw(mV[(mOpcode & 0x0F00) >> 8], mV[(mOpcode & 0x00F0) >> 4], mOpcode & 0x000F);
       break;
 
@@ -196,12 +196,12 @@ CPU::Execute()
 
       switch (mOpcode & 0xF0FF) {
         case 0xE09E: // Skip next instruction if the key in VX is pressed
-          /*if (mKeyboard->IsKeyPressed(x))
-            mPC += 2;*/
+          if (mKeyboard->IsKeyPressed(x))
+            mPC += 2;
           break;
         case 0xE0A1: // Skip next instruction if the key in VX isn't pressed
-          /*if (!mKeyboard->IsKeyPressed(x))
-            mPC += 2;*/
+          if (!mKeyboard->IsKeyPressed(x))
+            mPC += 2;
           break;
       }
       break;
@@ -237,10 +237,10 @@ CPU::Execute()
           SetBCD(mV[x]);
           break;
         case 0x0055: // Dump V0 to VX in memory (starting at I)
-          DumpRegisters(mV[x], mI);
+          DumpRegisters(x, mI);
           break;
         case 0x0065: // Fill V0 to VX from memory (starting at I)
-          LoadRegisters(mV[x], mI);
+          LoadRegisters(x, mI);
           break;
         default:
           break;

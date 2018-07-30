@@ -38,8 +38,8 @@ private:
   void SetDelay(uint8_t value);
   void SetSoundTimer(uint8_t value);
   uint16_t GetSpriteAddr(uint8_t r);
-  void DumpRegisters(int r_offset, uint16_t addr);
-  void LoadRegisters(int r_offset, uint16_t addr);
+  void DumpRegisters(int r_index, uint16_t addr);
+  void LoadRegisters(int r_index, uint16_t addr);
   void SetBCD(uint8_t r);
 
 public:
