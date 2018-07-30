@@ -50,13 +50,17 @@ Keyboard::ListenerThread()
 		switch (c) {
 			case ERR: // No input
 				break;
-			case 'W':
+			case '1':
 				break;
-			case 'A':
+			case '2':
 				break;
-			case 'S':
+			case '3':
 				break;
-			case 'D':
+			case '4':
+				break;
+			case '5':
+				break;
+			case '6':
 				break;
 		}
 	}

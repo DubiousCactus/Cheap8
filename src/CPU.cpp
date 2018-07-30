@@ -36,7 +36,7 @@ CPU::~CPU()
 void
 CPU::Step()
 {
-  printf("[*] CPU step (PC=%02X): fetching opcode...\n", mPC);
+  //printw("[*] CPU step (PC=%02X): fetching opcode...\n", mPC);
   mOpcode = mRam->ReadOpCode(mPC); // Fetch next opcode in the RAM
   Execute();
 
@@ -55,9 +55,10 @@ CPU::ClearScreen()
 void
 CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
 {
-  if ((x * y) < 0 || (x * y) > (SCREEN_H * SCREEN_W)) {
-    std::cout << "[ERROR]: Out of screen coordinates!" << std::endl;
-    exit(1);
+  if (x < 0 || x > SCREEN_W || y < 0 || y > SCREEN_H) {
+    printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
+    //exit(1);
+    return;
   }
 
   mV[0xF] = 0;
@@ -138,7 +139,7 @@ CPU::UpdateTimers()
 void
 CPU::Execute()
 {
-  printf("[*] Executing opcode: 0x%02X\n", mOpcode);
+  //printf("[*] Executing opcode: 0x%02X\n", mOpcode);
 
   switch (mOpcode & 0xF000) {
     case 0x0000:
@@ -176,7 +177,7 @@ CPU::Execute()
       break;
     case 0xD000: // Draw a sprite at (VX, VY), that has a width of 8 pixels and
                  // a height of N pixels
-      Draw(mV[mOpcode & 0x0F00], mV[mOpcode & 0x00F0], mOpcode & 0x000F);
+      Draw(mV[(mOpcode & 0x0F00) >> 8], mV[(mOpcode & 0x00F0) >> 4], mOpcode & 0x000F);
       break;
 
     case 0xE000: {

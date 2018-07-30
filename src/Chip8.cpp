@@ -19,7 +19,7 @@ Chip8::Chip8()
     mRunning = false;
     mCpu = new CPU();
     mRam = Memory::GetInstance();
-    //Init();
+    Init();
 }
 
 Chip8::~Chip8()
@@ -45,9 +45,7 @@ void
 Chip8::Cycle()
 {
     /* Run next instruction */
-    printf("[*] Running one cycle\n");
     mCpu->Step();
-    std::cin.get();
 }
 
 void
@@ -96,7 +94,6 @@ Chip8::MainLoop()
 void
 Chip8::Run()
 {
-    printf("[*] Running...\n");
     if (!mRunning) {
 	mRunning = true;
 	/* Start the mainLoop thread */
