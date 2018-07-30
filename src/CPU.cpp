@@ -57,7 +57,7 @@ CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
   }
 
   mV[0xF] = 0;
-
+/*
   for (int i = 0; i < height; i++) {
     auto byte = mRam->ReadByte(mI + i);
     for (int j = 0; j < 8; j++) { // Draw a row
@@ -67,7 +67,7 @@ CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
           mV[0xF] = 1; // Collision!
       }
     }
-  }
+  }*/
 }
 
 uint8_t

@@ -20,7 +20,7 @@ Screen::Screen()
     noecho();
     /* Clear the buffer */
     Clear();
-    mWindow = newwin(SCREEN_HEIGHT, SCREEN_WIDTH, 0, 0);
+    mWindow = newwin(SCREEN_HEIGHT + 2, SCREEN_WIDTH + 2, 5, 5);
 	//wborder(mWindow, 0, 0, 0, 0, 0, 0, 0, 0);
 	box(mWindow, 0, 0);
 }
@@ -60,7 +60,7 @@ Screen::Draw()
 {
     for (int x = 0; x < SCREEN_WIDTH; x++) {
 		for (int y = 0; y < SCREEN_HEIGHT; y++) {
-			mvwaddch(mWindow, x, y, mBuffer[x][y] ? ACS_BLOCK : ' ');
+			mvwaddch(mWindow, y + 1, x + 1, mBuffer[x][y] ? ACS_BLOCK : ' ');
 		}
     }
     wrefresh(mWindow);
