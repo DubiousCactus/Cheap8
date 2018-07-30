@@ -26,7 +26,7 @@ uint8_t
 Memory::ReadByte(uint16_t addr)
 {
   if (addr < 0 || addr >= MEMORY_SIZE) {
-    printf("[!] ERROR: address out of bounds\n");
+    printf("[!] ERROR: address out of bounds: 0x%02X [ReadByte]\n", addr);
     exit(1);
   }
 
@@ -37,7 +37,7 @@ uint16_t
 Memory::ReadOpCode(uint16_t addr)
 {
   if (addr < 0 || addr >= MEMORY_SIZE) {
-    printf("[!] ERROR: address out of bounds\n");
+    printf("[!] ERROR: address out of bounds: 0x%02X [ReadOpCode]\n", addr);
     exit(1);
   }
 
@@ -49,7 +49,7 @@ bool
 Memory::WriteByte(uint16_t addr, const uint8_t byte)
 {
   if (addr < 0 || addr >= MEMORY_SIZE) {
-    printf("[!] ERROR: address out of bounds\n");
+    printf("[!] ERROR: address out of bounds [WriteByte]\n");
     return false;
   } else {
     mLocations[addr] = byte;
@@ -61,7 +61,7 @@ bool
 Memory::WriteBytes(uint16_t addr, std::size_t length, const uint8_t* bytes)
 {
   if (addr < 0 || addr >= MEMORY_SIZE) {
-    printf("[!] ERROR: address out of bounds\n");
+    printf("[!] ERROR: address out of bounds [WriteBytes]\n");
     return false;
   } else if ((length + addr) >= MEMORY_SIZE) {
     printf("[!] ERROR: not enough memory\n");

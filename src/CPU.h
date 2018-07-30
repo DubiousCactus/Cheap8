@@ -27,7 +27,7 @@ private:
   uint16_t mI;      // Address register, 16 bits wide
   uint16_t mPC;     // Program counter, 16 bits
   uint16_t mOpcode; // 2 bytes
-  uint8_t mScreen[SCREEN_W * SCREEN_H];
+  uint8_t mScreen[SCREEN_W][SCREEN_H];
   Memory* mRam;  // TODO: use smart pointers
   Keyboard* mKeyboard;
   Stack* mStack; // Must be at least of size 16

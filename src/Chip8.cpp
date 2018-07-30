@@ -19,7 +19,7 @@ Chip8::Chip8()
     mRunning = false;
     mCpu = new CPU();
     mRam = Memory::GetInstance();
-    Init();
+    //Init();
 }
 
 Chip8::~Chip8()
@@ -46,6 +46,7 @@ Chip8::Cycle()
 {
     /* Run next instruction */
     mCpu->Step();
+    std::cin.get();
 }
 
 void
@@ -78,7 +79,7 @@ Chip8::MainLoop()
 {
     Timer displayTimer;
     displayTimer.Start();
-    Keyboard::GetInstance()->StartListening(mWindow);
+    //Keyboard::GetInstance()->StartListening(mWindow);
     while (this->mRunning) {
 	Cycle();
 	/* Try to refresh the screen at a 60Hz rate */

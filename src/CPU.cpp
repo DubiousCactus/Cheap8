@@ -36,7 +36,7 @@ CPU::~CPU()
 void
 CPU::Step()
 {
-  //printw("[*] CPU step (PC=%02X): fetching opcode...\n", mPC);
+  printf("[*] CPU step (PC=%02X): fetching opcode...\n", mPC);
   mOpcode = mRam->ReadOpCode(mPC); // Fetch next opcode in the RAM
   Execute();
 
@@ -68,9 +68,9 @@ CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
     for (int j = 0; j < 8; j++) { // Draw a row
       auto mask = 1 << (8 - i);
       if (byte & mask) { // Flip the pixel
-        if (mScreen[i * j] == 1)
+        if (mScreen[i][j] == 1)
           mV[0xF] = 1; // Collision!
-        mScreen[i * j] ^= mScreen[i * j];
+        mScreen[i][j] ^= mScreen[i][j];
       }
     }
   }
@@ -139,7 +139,7 @@ CPU::UpdateTimers()
 void
 CPU::Execute()
 {
-  //printf("[*] Executing opcode: 0x%02X\n", mOpcode);
+  printf("[*] Executing opcode: 0x%02X\n", mOpcode);
 
   switch (mOpcode & 0xF000) {
     case 0x0000:
@@ -171,12 +171,16 @@ CPU::Execute()
       mJMP = true;
       break;
     case 0xC000: // Set VX = NN & random()
-      mV[mOpcode & 0x0F00] =
+      mV[(mOpcode & 0x0F00) >> 8] =
         (rand() % 255) &
         (mOpcode & 0x00FF); // TODO: Make sure this is done right!
       break;
     case 0xD000: // Draw a sprite at (VX, VY), that has a width of 8 pixels and
                  // a height of N pixels
+      printf("DRAW: mV[%d]=%d - mV[%d]=%d -  H=%d\n",
+          (mOpcode & 0x0F00) >> 8, mV[(mOpcode & 0x0F00) >> 8],
+          (mOpcode & 0x00F0) >> 4, mV[(mOpcode & 0x00F0) >> 4],
+          mOpcode & 0x000F);
       Draw(mV[(mOpcode & 0x0F00) >> 8], mV[(mOpcode & 0x00F0) >> 4], mOpcode & 0x000F);
       break;
 
@@ -189,12 +193,12 @@ CPU::Execute()
 
       switch (mOpcode & 0xF0FF) {
         case 0xE09E: // Skip next instruction if the key in VX is pressed
-          if (mKeyboard->IsKeyPressed(x))
-            mPC += 2;
+          /*if (mKeyboard->IsKeyPressed(x))
+            mPC += 2;*/
           break;
         case 0xE0A1: // Skip next instruction if the key in VX isn't pressed
-          if (!mKeyboard->IsKeyPressed(x))
-            mPC += 2;
+          /*if (!mKeyboard->IsKeyPressed(x))
+            mPC += 2;*/
           break;
       }
       break;
