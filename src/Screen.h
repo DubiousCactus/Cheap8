@@ -11,8 +11,9 @@
 #include <cstdint>
 #include <ncurses.h>
 
-#define SCREEN_WIDTH 64
-#define SCREEN_HEIGHT 32
+#define SCALE_FACTOR 1
+#define SCREEN_WIDTH 64 * SCALE_FACTOR
+#define SCREEN_HEIGHT 32 * SCALE_FACTOR
 
 class Screen
 {
@@ -29,6 +30,7 @@ class Screen
     void Draw();
     void Clear();
     WINDOW* GetHandle();
+	void Resize();
 };
 
 #endif /* !SCREEN_H */

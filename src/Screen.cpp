@@ -13,6 +13,7 @@ Screen* Screen::mInstance = nullptr;
 
 Screen::Screen()
 {
+
     /* ncurses */
     initscr();
     cbreak();
@@ -20,10 +21,13 @@ Screen::Screen()
     /* Clear the buffer */
     Clear();
     mWindow = newwin(SCREEN_HEIGHT, SCREEN_WIDTH, 0, 0);
+	//wborder(mWindow, 0, 0, 0, 0, 0, 0, 0, 0);
+	box(mWindow, 0, 0);
 }
 
 Screen::~Screen()
 {
+	delwin(mWindow);
     endwin();
 }
 
@@ -56,7 +60,7 @@ Screen::Draw()
 {
     for (int x = 0; x < SCREEN_WIDTH; x++) {
 		for (int y = 0; y < SCREEN_HEIGHT; y++) {
-			mvwaddch(mWindow, x, y, mBuffer[x][y] ? '#' : 'E');
+			mvwaddch(mWindow, x, y, mBuffer[x][y] ? ACS_BLOCK : ' ');
 		}
     }
     wrefresh(mWindow);
@@ -66,4 +70,12 @@ WINDOW*
 Screen::GetHandle()
 {
     return mWindow;
+}
+
+void
+Screen::Resize()
+{
+	// TODO
+	int nh, nw;
+	getmaxyx(stdscr, nh, nw);  /* get the new screen size */
 }
