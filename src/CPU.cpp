@@ -123,11 +123,11 @@ CPU::LoadRegisters(int r_index, uint16_t addr)
 
 /* Stores the BCD representation of the given register into I */
 void
-CPU::SetBCD(uint8_t r)
+CPU::SetBCD(uint8_t value)
 {
-  mRam->WriteByte(mI, r / 100);
-  mRam->WriteByte(mI + 1, (r / 10) % 10);
-  mRam->WriteByte(mI + 2, r % 10);
+  mRam->WriteByte(mI, value / 100);
+  mRam->WriteByte(mI + 1, (value / 10) % 10);
+  mRam->WriteByte(mI + 2, value % 10);
 }
 
 void
@@ -142,16 +142,16 @@ CPU::UpdateTimers()
 void
 CPU::Execute()
 {
-  //printf("[*] Executing opcode: 0x%02X\n", mOpcode);
+  //printw("[*] Executing opcode: 0x%02X\n", mOpcode);
 
   switch (mOpcode & 0xF000) {
     case 0x0000:
-      switch (mOpcode & 0x000F) { // Clear the screen
-        case 0x00E0:
+      switch (mOpcode & 0x00FF) {
+        case 0x00E0: // Clear the screen
           mScreen->Clear();
           break;
         case 0x00EE: // Return from subroutine.
-          mPC = mStack->Pop();
+          mPC = mStack->Pop(); //TODO FIX THIS BUG ! It doesn't return from a subroutine :/
           break;
         default:
           break;
@@ -180,10 +180,6 @@ CPU::Execute()
       break;
     case 0xD000: // Draw a sprite at (VX, VY), that has a width of 8 pixels and
                  // a height of N pixels
-      /*printf("DRAW: mV[%d]=%d - mV[%d]=%d -  H=%d\n",
-          (mOpcode & 0x0F00) >> 8, mV[(mOpcode & 0x0F00) >> 8],
-          (mOpcode & 0x00F0) >> 4, mV[(mOpcode & 0x00F0) >> 4],
-          mOpcode & 0x000F);*/
       Draw(mV[(mOpcode & 0x0F00) >> 8], mV[(mOpcode & 0x00F0) >> 4], mOpcode & 0x000F);
       break;
 
@@ -196,10 +192,12 @@ CPU::Execute()
 
       switch (mOpcode & 0xF0FF) {
         case 0xE09E: // Skip next instruction if the key in VX is pressed
+          printf("waiting for %d\n", mV[x]);
           if (mKeyboard->IsKeyPressed(mV[x]))
             mPC += 2;
           break;
         case 0xE0A1: // Skip next instruction if the key in VX isn't pressed
+          printf("waiting for %d\n", mV[x]);
           if (!mKeyboard->IsKeyPressed(mV[x]))
             mPC += 2;
           break;
@@ -219,6 +217,7 @@ CPU::Execute()
           mV[x] = GetDelay();
           break;
         case 0x000A: // Set VX = key press (blocking)
+          printf("READING KEY\n");
           mV[x] = mKeyboard->ReadKey();
           break;
         case 0x0015: // Set delay timer = VX
@@ -293,13 +292,13 @@ CPU::Execute()
                 mV[x] = mV[y];
                 break;
               case 0x8001: // Set VX = (VX | VY)
-                mV[x] = (mV[x] | mV[y]);
+                mV[x] |= mV[y];
                 break;
               case 0x8002: // Set VX = (VX & VY)
-                mV[x] = (mV[x] & mV[y]);
+                mV[x] &= mV[y];
                 break;
               case 0x8003: // Set VX = (VX ^ VY)
-                mV[x] = (mV[x] ^ mV[y]);
+                mV[x] ^= mV[y];
                 break;
               case 0x8004:                  // Set VX += VY
                 mV[0xF] = ((mV[x] + mV[y]) > 0xFF); // Set VF to 1 if there's a carry
