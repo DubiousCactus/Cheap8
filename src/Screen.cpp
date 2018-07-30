@@ -20,6 +20,7 @@ Screen::Screen()
     /* Clear the buffer */
     Clear();
     mWindow = newwin(SCREEN_HEIGHT + 2, SCREEN_WIDTH + 2, 5, 5);
+	nodelay(mWindow, TRUE); // <- de-blocking the user input
 	box(mWindow, 0, 0);
 }
 

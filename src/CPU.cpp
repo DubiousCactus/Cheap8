@@ -52,7 +52,7 @@ CPU::Draw(uint8_t x, uint8_t y, const uint8_t height)
 {
   if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) {
     printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
-    //exit(1);
+    exit(1);
     if (x > SCREEN_WIDTH) {
       x -= SCREEN_WIDTH;
     } else if (x < 0) {
@@ -142,7 +142,7 @@ CPU::UpdateTimers()
 void
 CPU::Execute()
 {
-  printf("[*] Executing opcode: 0x%02X\n", mOpcode);
+  //printf("[*] Executing opcode: 0x%02X\n", mOpcode);
 
   switch (mOpcode & 0xF000) {
     case 0x0000:
@@ -180,10 +180,10 @@ CPU::Execute()
       break;
     case 0xD000: // Draw a sprite at (VX, VY), that has a width of 8 pixels and
                  // a height of N pixels
-      printf("DRAW: mV[%d]=%d - mV[%d]=%d -  H=%d\n",
+      /*printf("DRAW: mV[%d]=%d - mV[%d]=%d -  H=%d\n",
           (mOpcode & 0x0F00) >> 8, mV[(mOpcode & 0x0F00) >> 8],
           (mOpcode & 0x00F0) >> 4, mV[(mOpcode & 0x00F0) >> 4],
-          mOpcode & 0x000F);
+          mOpcode & 0x000F);*/
       Draw(mV[(mOpcode & 0x0F00) >> 8], mV[(mOpcode & 0x00F0) >> 4], mOpcode & 0x000F);
       break;
 
@@ -196,11 +196,11 @@ CPU::Execute()
 
       switch (mOpcode & 0xF0FF) {
         case 0xE09E: // Skip next instruction if the key in VX is pressed
-          if (mKeyboard->IsKeyPressed(x))
+          if (mKeyboard->IsKeyPressed(mV[x]))
             mPC += 2;
           break;
         case 0xE0A1: // Skip next instruction if the key in VX isn't pressed
-          if (!mKeyboard->IsKeyPressed(x))
+          if (!mKeyboard->IsKeyPressed(mV[x]))
             mPC += 2;
           break;
       }

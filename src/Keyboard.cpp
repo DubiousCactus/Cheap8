@@ -32,7 +32,7 @@ Keyboard::ReadKey()
     uint8_t key;
     while (noKeyPress) {
 	for (int i = 0; i < 16; i++) {
-	    if (Keyboard::mKeys[i]) {
+	    if (mKeys[i]) {
 		key = i;
 		noKeyPress = false;
 	    }
@@ -46,23 +46,13 @@ void
 Keyboard::ListenerThread()
 {
     while (mListening) {
-	nodelay(mWindow, TRUE); // <- de-blocking
-	int c = getch();	// Blocking!
-	switch (c) {
-	    case ERR: // No input
-		break;
-	    case '1':
-		break;
-	    case '2':
-		break;
-	    case '3':
-		break;
-	    case '4':
-		break;
-	    case '5':
-		break;
-	    case '6':
-		break;
+	for (int i = 0; i < 16; i++)
+	    mKeys[i] = false;
+	int c = getch();
+	std::string mapping("0123456789ABCDEF");
+	if (c != ERR) {
+	    if (mapping.find(c) >= 0 && mapping.find(c) <= 'F')
+		mKeys[mapping.find(c)] = true;
 	}
     }
 }

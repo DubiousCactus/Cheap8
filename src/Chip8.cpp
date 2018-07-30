@@ -81,12 +81,11 @@ Chip8::MainLoop()
 	if (cpuTimer.ElapsedNanoseconds() >= 250) {
 	    /* Run next instruction */
 	    mCpu->Step();
-	    //std::cin.get();
 	    cpuTimer.Reset();
 	}
 	/* Try to refresh the screen at a 60Hz rate */
 	if (displayTimer.ElapsedMilliseconds() >= 16) {
-	    //mScreen->Draw();
+	    mScreen->Draw();
 	    displayTimer.Reset();
 	}
     }
