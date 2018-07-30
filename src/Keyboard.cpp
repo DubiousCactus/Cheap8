@@ -6,25 +6,23 @@
  */
 
 #include "Keyboard.h"
+#include "Chip8.h"
 #include "Screen.h"
 #include "Timer.h"
 
 #include <ncurses.h>
 #include <thread>
 
-Keyboard* Keyboard::mInstance = nullptr;
-
-Keyboard::Keyboard()
+Keyboard::Keyboard(Chip8* chip, WINDOW* handle)
 {
+    mChip = chip;
+    mWindow = handle;
     mListening = false;
     for (int i = 0; i < 16; i++)
 	mKeys[i] = false;
 }
 
-Keyboard::~Keyboard()
-{
-    delete mInstance;
-}
+Keyboard::~Keyboard() {}
 
 uint8_t
 Keyboard::ReadKey()
@@ -55,10 +53,13 @@ Keyboard::ListenerThread()
 		timer.Reset();
 	    }
 	}
-	
+
 	int c = getch();
 	std::string mapping("0123456789ABCDEF");
 	if (c != ERR) {
+	    if (c == 27) // ESC
+		mChip->Stop();
+
 	    if (mapping.find(c) >= 0) {
 		mKeys[mapping.find(c)] = true;
 		timer.Start();
@@ -72,7 +73,6 @@ Keyboard::StartListening()
 {
     if (!mListening) {
 	mListening = true;
-	mWindow = Screen::GetInstance()->GetHandle();
 	std::thread(&Keyboard::ListenerThread, this).detach();
     }
 }
@@ -87,13 +87,4 @@ bool
 Keyboard::IsKeyPressed(uint8_t x)
 {
     return mKeys[x];
-}
-
-Keyboard*
-Keyboard::GetInstance()
-{
-    if (!Keyboard::mInstance)
-	Keyboard::mInstance = new Keyboard();
-
-    return Keyboard::mInstance;
 }

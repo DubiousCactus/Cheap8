@@ -9,8 +9,6 @@
 #define CHIP8_H
 
 #include "CPU.h"
-#include "Memory.h"
-#include "Screen.h"
 
 #include <cstdint>
 
@@ -25,12 +23,13 @@ private:
   CPU* mCpu;
   Memory* mRam;
   Screen* mScreen;
+  Keyboard* mKeyboard;
 
   void UpdateTimers();
   void Init();
 
 public:
-  Chip8();
+  Chip8(Screen* screen);
   ~Chip8();
   void MainLoop();
   void Run();

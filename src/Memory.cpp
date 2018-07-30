@@ -12,10 +12,6 @@
 #include <cstring>
 
 
-/* TODO: TAKE CARE OF THE ENDIANNESS PROBLEM */
-
-Memory* Memory::mInstance = nullptr;
-
 Memory::Memory()
 {
   memset(mLocations, 0, MEMORY_SIZE * sizeof(mLocations[0]));
@@ -72,14 +68,4 @@ Memory::WriteBytes(uint16_t addr, std::size_t length, const uint8_t* bytes)
 
     return true;
   }
-}
-
-Memory*
-Memory::GetInstance()
-{
-  if (!mInstance) {
-    mInstance = new Memory();
-  }
-
-  return mInstance;
 }

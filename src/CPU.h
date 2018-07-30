@@ -8,10 +8,10 @@
 #ifndef CPU_H
 #define CPU_H
 
-#include "Keyboard.h"
 #include "Memory.h"
 #include "Screen.h"
 #include "Stack.h"
+#include "Keyboard.h"
 
 #include <cstdint>
 
@@ -33,7 +33,7 @@ private:
   bool mJMP;
 
   void Execute();
-  void Draw(uint8_t x, uint8_t y, const uint8_t height);
+  void Draw(uint8_t x, uint8_t y, uint8_t height);
   uint8_t GetDelay();
   void SetDelay(uint8_t value);
   void SetSoundTimer(uint8_t value);
@@ -43,7 +43,7 @@ private:
   void SetBCD(uint8_t r);
 
 public:
-  CPU();
+  CPU(Keyboard* keyboard, Memory* ram, Screen* screen);
   ~CPU();
   void Step();
   void UpdateTimers();

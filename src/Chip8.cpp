@@ -14,20 +14,21 @@
 #include <iostream>
 #include <thread>
 
-Chip8::Chip8()
+Chip8::Chip8(Screen* screen)
 {
     mRunning = false;
-    mScreen = Screen::GetInstance();
-    mRam = Memory::GetInstance();
-    mCpu = new CPU();
+    mScreen = screen;
+    mRam = new Memory();
+    mKeyboard = new Keyboard(this, mScreen->GetHandle());
+    mCpu = new CPU(mKeyboard, mRam, mScreen);
     Init();
 }
 
 Chip8::~Chip8()
 {
     delete mCpu;
-    delete mRam;
-    delete mScreen;
+    //delete mKeyboard;
+    //delete mRam;
 }
 
 void
@@ -50,9 +51,9 @@ Chip8::Init()
 	0xF0, 0x80, 0x80, 0x80, 0xF0, // C
 	0xE0, 0x90, 0x90, 0x90, 0xE0, // D
 	0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-	0xF0, 0x80, 0xF0, 0x80, 0x80 // F
+	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
     };
-    mRam->WriteBytes(FONTS_OFFSET, sizeof(fonts)/sizeof(uint8_t), fonts);
+    mRam->WriteBytes(FONTS_OFFSET, sizeof(fonts) / sizeof(uint8_t), fonts);
 }
 
 void
@@ -68,15 +69,14 @@ Chip8::UpdateTimers()
     chip8Timers.Stop();
 }
 
-
 void
 Chip8::MainLoop()
 {
     Timer displayTimer, cpuTimer;
     displayTimer.Start();
     cpuTimer.Start();
-    Keyboard::GetInstance()->StartListening();
-    while (this->mRunning) {
+    mKeyboard->StartListening();
+    while (mRunning) {
 	/* Run the CPU at 4MHz */
 	if (cpuTimer.ElapsedNanoseconds() >= 250) {
 	    /* Run next instruction */
@@ -91,7 +91,7 @@ Chip8::MainLoop()
     }
     displayTimer.Stop();
     cpuTimer.Stop();
-    Keyboard::GetInstance()->StopListening();
+    mKeyboard->StopListening();
 }
 
 void
@@ -118,7 +118,8 @@ Chip8::Load(const char* file_name)
 {
     FILE* file = fopen(file_name, "rb");
     if (file == nullptr) {
-	std::cout << "[!] ERROR: Could not open '" << file_name << "'" << std::endl;
+	std::cout << "[!] ERROR: Could not open '" << file_name << "'"
+		  << std::endl;
 	exit(1);
     }
 

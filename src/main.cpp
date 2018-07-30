@@ -11,10 +11,12 @@
 #include <cstdio>
 #include <csignal>
 
+Screen* screen;
+
 void
 ResizeHandler(int sig)
 {
-    Screen::GetInstance()->Resize();
+    screen->Resize();
 }
 
 int
@@ -27,9 +29,12 @@ main(int argc, char** argv)
     }
 
     printf("Loading: %s ...\n", argv[1]);
-    Chip8 cheap8 = Chip8();
+    screen = new Screen();
+    Chip8 cheap8 = Chip8(screen);
     cheap8.Load(argv[1]);
     cheap8.Run();
+
+    //delete screen;
 
     return 0;
 }

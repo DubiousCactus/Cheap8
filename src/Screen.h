@@ -17,20 +17,18 @@
 
 class Screen
 {
-  private:
-    static Screen* mInstance;
-    Screen();
-    uint8_t mBuffer[SCREEN_WIDTH][SCREEN_HEIGHT];
-    WINDOW* mWindow;
+private:
+  uint8_t mBuffer[SCREEN_WIDTH][SCREEN_HEIGHT];
+  WINDOW* mWindow;
 
-  public:
-    ~Screen();
-    static Screen* GetInstance();
-    bool TogglePixel(const uint8_t x, const uint8_t y);
-    void Draw();
-    void Clear();
-    WINDOW* GetHandle();
-	void Resize();
+public:
+  Screen();
+  ~Screen();
+  bool TogglePixel(const uint8_t x, const uint8_t y);
+  void Draw();
+  void Clear();
+  WINDOW* GetHandle();
+  void Resize();
 };
 
 #endif /* !SCREEN_H */

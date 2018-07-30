@@ -20,13 +20,10 @@ class Memory
 
 private:
   uint8_t mLocations[MEMORY_SIZE];
-  static Memory* mInstance;
-
-  Memory();
 
 public:
+  Memory();
   ~Memory();
-  static Memory* GetInstance();
   uint8_t ReadByte(uint16_t addr);
   uint16_t ReadOpCode(uint16_t addr);
   bool WriteByte(uint16_t addr, uint8_t byte);
