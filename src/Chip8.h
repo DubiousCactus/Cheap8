@@ -25,14 +25,14 @@ class Chip8
     CPU* mCpu;
     Memory* mRam;
     WINDOW* mWindow;
+    void UpdateTimers();
+    void DrawGraphics();
+    void Init();
+    void Cycle();
 
   public:
     Chip8();
     ~Chip8();
-    void Init();
-    void Cycle();
-    void UpdateTimers();
-    void DrawGraphics();
     void MainLoop();
     void Run();
     void Stop();

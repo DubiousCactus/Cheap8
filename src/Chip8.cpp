@@ -62,17 +62,6 @@ Chip8::UpdateTimers()
     chip8Timers.Stop();
 }
 
-void
-Chip8::DrawGraphics()
-{
-    // Write the pixels array using ncurses
-    for (int x = 0; x < SCREEN_W; x++) {
-	for (int y = 0; y < SCREEN_H; y++) {
-	    mvwaddch(mWindow, x, y, '#');
-	}
-    }
-    wrefresh(mWindow);
-}
 
 void
 Chip8::MainLoop()
