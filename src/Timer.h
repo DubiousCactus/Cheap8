@@ -12,18 +12,18 @@
 
 class Timer
 {
-  private:
-    std::chrono::time_point<std::chrono::system_clock> mStartTime;
-    std::chrono::time_point<std::chrono::system_clock> mEndTime;
-    bool mRunning = false;
+private:
+  std::chrono::time_point<std::chrono::system_clock> mStartTime;
+  std::chrono::time_point<std::chrono::system_clock> mEndTime;
+  bool mRunning = false;
 
-  public:
-    void Start();
-    void Stop();
-    void Reset();
-    double ElapsedSeconds();
-    double ElapsedMilliseconds();
-    double ElapsedNanoseconds();
+public:
+  void Start();
+  void Stop();
+  void Reset();
+  double ElapsedSeconds();
+  double ElapsedMilliseconds();
+  double ElapsedNanoseconds();
 };
 
 #endif /* !TIMER_H */
