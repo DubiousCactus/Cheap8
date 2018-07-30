@@ -11,7 +11,7 @@
 
 Stack::Stack()
 {
-    memset(mStack, 0, STACK_SIZE * sizeof(mStack[0]));
+    memset(mStack, 0, STACK_SIZE * sizeof(uint16_t));
     mSp = 0;
 }
 
@@ -24,11 +24,10 @@ Stack::Pop()
     return word;
 }
 
-uint16_t
+void
 Stack::Push(uint16_t word)
 {
-    mStack[++mSp] = word;
-
-    return mSp;
+    if (mSp > 0)
+        mSp++;
+    mStack[mSp] = word;
 }
-

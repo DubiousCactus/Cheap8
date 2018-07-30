@@ -52,7 +52,7 @@ Chip8::Init()
 	0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
 	0xF0, 0x80, 0xF0, 0x80, 0x80 // F
     };
-    mRam->WriteBytes(0x000, sizeof(fonts)/sizeof(uint8_t), fonts);
+    mRam->WriteBytes(FONTS_OFFSET, sizeof(fonts)/sizeof(uint8_t), fonts);
 }
 
 void
@@ -75,7 +75,7 @@ Chip8::MainLoop()
     Timer displayTimer, cpuTimer;
     displayTimer.Start();
     cpuTimer.Start();
-    Keyboard::GetInstance()->StartListening();
+    //Keyboard::GetInstance()->StartListening();
     while (this->mRunning) {
 	/* Run the CPU at 4MHz */
 	if (cpuTimer.ElapsedNanoseconds() >= 250) {
@@ -85,7 +85,7 @@ Chip8::MainLoop()
 	}
 	/* Try to refresh the screen at a 60Hz rate */
 	if (displayTimer.ElapsedMilliseconds() >= 16) {
-	    mScreen->Draw();
+	    //mScreen->Draw();
 	    displayTimer.Reset();
 	}
     }
@@ -102,7 +102,7 @@ Chip8::Run()
 	/* Start the mainLoop thread */
 	std::thread(&Chip8::MainLoop, this).join();
 	/* Start the timer thread */
-	std::thread(&Chip8::UpdateTimers, this).join();
+	//std::thread(&Chip8::UpdateTimers, this).join();
     }
 }
 
@@ -131,8 +131,6 @@ Chip8::Load(const char* file_name)
     /* Read the whole file as a block */
     bytes = (uint8_t*)malloc(sizeof(uint8_t) * file_size);
     size_t size_read = fread(bytes, 1, file_size, file);
-
-    // TODO: Reverse endianness
 
     if (file_size > 3584) {
 	printf("[!] ERROR: ROM file too large\n");

@@ -22,7 +22,7 @@ private:
 public:
   Stack();
   uint16_t Pop();
-  uint16_t Push(uint16_t word); // Pushes a word and returns SP
+  void Push(uint16_t word);
 };
 
 #endif /* !STACK_H */

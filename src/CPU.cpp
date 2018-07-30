@@ -101,8 +101,7 @@ CPU::SetSoundTimer(uint8_t value)
 uint16_t
 CPU::GetSpriteAddr(uint8_t r)
 {
-  // TODO
-  return 0x000;
+  return FONTS_OFFSET + (5 * r);
 }
 
 /* Store V0 to VX (r - included) in memory, starting at address I */
@@ -143,7 +142,7 @@ CPU::UpdateTimers()
 void
 CPU::Execute()
 {
-  //printf("[*] Executing opcode: 0x%02X\n", mOpcode);
+  printf("[*] Executing opcode: 0x%02X\n", mOpcode);
 
   switch (mOpcode & 0xF000) {
     case 0x0000:
