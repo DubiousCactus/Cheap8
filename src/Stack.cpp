@@ -12,7 +12,7 @@
 Stack::Stack()
 {
     mTop = 0;
-    memset(mStack, 0, STACK_SIZE * sizeof(uint16_t));
+    memset(mStack, 0, STACK_SIZE * sizeof(mStack[0]));
     mSp = 0;
 }
 

@@ -6,6 +6,7 @@
  */
 
 #include "Memory.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -17,7 +18,7 @@ Memory* Memory::mInstance = nullptr;
 
 Memory::Memory()
 {
-  memset(mLocations, 0, MEMORY_SIZE);
+  memset(mLocations, 0, MEMORY_SIZE * sizeof(mLocations[0]));
 }
 
 Memory::~Memory() {}

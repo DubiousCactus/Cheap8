@@ -15,7 +15,7 @@
 CPU::CPU()
 {
   srand((unsigned)time(NULL));
-  memset(mV, 0, 16 * sizeof(uint8_t));
+  memset(mV, 0, 16 * sizeof(mV[0]));
   mStack = new Stack();
   mRam = Memory::GetInstance();
   mKeyboard = Keyboard::GetInstance();
@@ -48,26 +48,36 @@ CPU::Step()
 }
 
 void
-CPU::Draw(const uint8_t x, const uint8_t y, const uint8_t height)
+CPU::Draw(uint8_t x, uint8_t y, const uint8_t height)
 {
   if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) {
-    //printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
+    printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
     //exit(1);
-    return;
+    if (x > SCREEN_WIDTH) {
+      x -= SCREEN_WIDTH;
+    } else if (x < 0) {
+      x += SCREEN_WIDTH;
+    }
+
+    if (y > SCREEN_HEIGHT) {
+      y -= SCREEN_HEIGHT;
+    } else if (y < 0) {
+      y += SCREEN_HEIGHT;
+    }
   }
 
   mV[0xF] = 0;
-/*
+
   for (int i = 0; i < height; i++) {
     auto byte = mRam->ReadByte(mI + i);
     for (int j = 0; j < 8; j++) { // Draw a row
-      auto mask = 1 << (8 - i);
+      auto mask = 1 << (8 - (j + 1));
       if (byte & mask) { // Flip the pixel
-        if (mScreen->TogglePixel(i, j))
+        if (mScreen->TogglePixel(x + j, y + i))
           mV[0xF] = 1; // Collision!
       }
     }
-  }*/
+  }
 }
 
 uint8_t
@@ -117,7 +127,7 @@ void
 CPU::SetBCD(uint8_t r)
 {
   mRam->WriteByte(mI, r / 100);
-  mRam->WriteByte(mI + 1, r / 10 % 10);
+  mRam->WriteByte(mI + 1, (r / 10) % 10);
   mRam->WriteByte(mI + 2, r % 10);
 }
 

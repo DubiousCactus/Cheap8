@@ -16,8 +16,8 @@ Keyboard* Keyboard::mInstance = nullptr;
 Keyboard::Keyboard()
 {
 	mListening = false;
-	for (auto& key : mKeys)
-		key = false;
+	for (int i = 0; i < 16; i++)
+		mKeys[i] = false;
 }
 
 Keyboard::~Keyboard()

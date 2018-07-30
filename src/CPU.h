@@ -34,7 +34,7 @@ private:
 
   void Execute();
   void ClearScreen();
-  void Draw(const uint8_t x, const uint8_t y, const uint8_t height);
+  void Draw(uint8_t x, uint8_t y, const uint8_t height);
   uint8_t GetDelay();
   void SetDelay(uint8_t value);
   void SetSoundTimer(uint8_t value);
