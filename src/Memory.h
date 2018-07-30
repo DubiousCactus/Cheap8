@@ -11,7 +11,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#define MEMORY_SIZE 0xFFF
+#define MEMORY_SIZE 0x1000
 #define GAME_OFFSET 0x200
 
 class Memory
