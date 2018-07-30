@@ -28,18 +28,24 @@ Timer::Reset()
 }
 
 double
-Timer::ElpasedMilliseconds()
+Timer::ElapsedNanoseconds()
 {
     std::chrono::time_point<std::chrono::system_clock> endTime;
     endTime = mRunning ? std::chrono::system_clock::now() : mEndTime;
 
-    return std::chrono::duration_cast
-		<std::chrono::milliseconds
-	>(endTime - mStartTime).count();
+    return std::chrono::duration_cast<
+	std::chrono::nanoseconds
+    >(endTime - mStartTime).count();
+}
+
+double
+Timer::ElapsedMilliseconds()
+{
+    return ElapsedNanoseconds() / 1000000.0;
 }
 
 double
 Timer::ElapsedSeconds()
 {
-    return ElpasedMilliseconds() / 1000.0;
+    return ElapsedMilliseconds() / 1000.0;
 }

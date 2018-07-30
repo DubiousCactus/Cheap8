@@ -56,7 +56,7 @@ Screen::Draw()
 {
     for (int x = 0; x < SCREEN_WIDTH; x++) {
 		for (int y = 0; y < SCREEN_HEIGHT; y++) {
-			mvwaddch(mWindow, x, y, mBuffer[x][y] ? '#' : ' ');
+			mvwaddch(mWindow, x, y, mBuffer[x][y] ? '#' : 'E');
 		}
     }
     wrefresh(mWindow);

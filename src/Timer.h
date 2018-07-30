@@ -20,9 +20,10 @@ class Timer
   public:
     void Start();
     void Stop();
-	void Reset();
+    void Reset();
     double ElapsedSeconds();
-    double ElpasedMilliseconds();
+    double ElapsedMilliseconds();
+    double ElapsedNanoseconds();
 };
 
 #endif /* !TIMER_H */
