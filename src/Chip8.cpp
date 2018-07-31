@@ -82,7 +82,7 @@ Chip8::CPULoop()
       mCpu->ResetDrawFlag();
     }
     /* Run the CPU at 4MHz */
-    std::this_thread::sleep_for(250ns);
+    std::this_thread::sleep_for(2ms);
   }
 }
 
@@ -95,7 +95,7 @@ Chip8::UILoop()
     mDrawAction.wait(lock);
     mScreen->Draw();
     /* Try to refresh the screen at a 60Hz rate (max) */
-    std::this_thread::sleep_for(16ms);
+    std::this_thread::sleep_for(10ms);
   }
 }
 
