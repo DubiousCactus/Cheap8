@@ -13,6 +13,8 @@
 #include "Screen.h"
 #include "Stack.h"
 
+#include <atomic>
+
 class CPU
 {
 
@@ -29,7 +31,7 @@ private:
   uint8_t mDelay_timer;
   uint8_t mSound_timer;
   bool mJMP;
-  bool mDrawFlag;
+  std::atomic<bool> mDrawFlag;
 
   void Execute();
   void Draw(uint8_t x, uint8_t y, uint8_t height);

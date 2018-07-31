@@ -8,8 +8,10 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+#include <atomic>
 #include <cstdint>
 #include <ncurses.h>
+#include <thread>
 
 class Chip8; // Forward-declaration
 
@@ -18,8 +20,9 @@ class Keyboard
 
 private:
   bool mKeys[16];
-  bool mListening;
+  std::atomic<bool> mListening;
   Chip8* mChip;
+  std::thread tListener;
 
   void ListenerThread();
 

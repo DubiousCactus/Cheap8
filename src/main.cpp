@@ -55,6 +55,8 @@ main(int argc, char** argv)
   cheap8->Load(argv[1]);
   cheap8->Run();
 
+  printf("Ending from main");
+
   delete screen;
 
   return 0;

@@ -81,21 +81,21 @@ Chip8::CPULoop()
       mDrawAction.notify_one();
       mCpu->ResetDrawFlag();
     }
-    /* Run the CPU at 4MHz */
-    std::this_thread::sleep_for(2ms);
+    /* Run the CPU at XMHz */
+    std::this_thread::sleep_for(1ms);
   }
 }
 
 void
 Chip8::UILoop()
 {
+  std::unique_lock<std::mutex> lock(mtx);
   while (mRunning) {
     /* Don't refresh the UI until the buffer has been updated */
-    std::unique_lock<std::mutex> lock(mtx);
-    mDrawAction.wait(lock);
+    mDrawAction.wait_for(lock, std::chrono::milliseconds(5));
     mScreen->Draw();
-    /* Try to refresh the screen at a 60Hz rate (max) */
-    std::this_thread::sleep_for(10ms);
+    /* Try to refresh the screen at a XHz rate (max) */
+    std::this_thread::sleep_for(5ms);
   }
 }
 
@@ -105,14 +105,13 @@ Chip8::Run()
   if (!mRunning) {
     mRunning = true;
     // mKeyboard->StartListening();
-    std::thread tUI(&Chip8::UILoop, this);
-    std::thread tCPU(&Chip8::CPULoop, this);
-    std::thread tTimers(&Chip8::UpdateTimers, this);
-    // mKeyboard->StopListening();
+    tUI = std::thread(&Chip8::UILoop, this);
+    tCPU = std::thread(&Chip8::CPULoop, this);
+    tTimers = std::thread(&Chip8::UpdateTimers, this);
 
-    tUI.join();
     tCPU.join();
     tTimers.join();
+    tUI.join();
   }
 }
 
@@ -120,6 +119,7 @@ void
 Chip8::Stop()
 {
   mRunning = false;
+  // mKeyboard->StopListening();
 }
 
 /* Load a CHIP-8 program - from a file - into the RAM */

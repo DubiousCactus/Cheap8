@@ -58,6 +58,7 @@ Screen::Draw()
       mvwaddch(mWindow, y + 1, x + 1, mBuffer[x][y] == 1 ? ACS_BLOCK : ' ');
     }
   }
+  box(mWindow, 0, 0);
   wrefresh(mWindow);
 }
 

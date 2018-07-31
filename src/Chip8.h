@@ -10,20 +10,25 @@
 
 #include "CPU.h"
 
+#include <atomic>
 #include <condition_variable>
 #include <cstdint>
 #include <mutex>
+#include <thread>
 
 class Chip8
 {
 private:
-  bool mRunning;
+  std::atomic<bool> mRunning;
   CPU* mCpu;
   Memory* mRam;
   Screen* mScreen;
   Keyboard* mKeyboard;
   std::condition_variable mDrawAction;
   std::mutex mtx;
+  std::thread tUI;
+  std::thread tCPU;
+  std::thread tTimers;
 
   void UpdateTimers();
   void Init();

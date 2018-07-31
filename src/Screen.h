@@ -8,6 +8,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#include <atomic>
 #include <cstdint>
 #include <ncurses.h>
 
@@ -18,7 +19,7 @@
 class Screen
 {
 private:
-  uint8_t mBuffer[SCREEN_WIDTH][SCREEN_HEIGHT];
+  std::atomic<uint8_t> mBuffer[SCREEN_WIDTH][SCREEN_HEIGHT];
   WINDOW* mWindow;
 
 public:
