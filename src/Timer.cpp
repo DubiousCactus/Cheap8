@@ -10,29 +10,29 @@
 void
 Timer::Start()
 {
-  mStartTime = std::chrono::system_clock::now();
+  mStartTime = std::chrono::high_resolution_clock::now();
   mRunning = true;
 }
 
 void
 Timer::Stop()
 {
-  mEndTime = std::chrono::system_clock::now();
+  mEndTime = std::chrono::high_resolution_clock::now();
   mRunning = false;
 }
 
 void
 Timer::Reset()
 {
-  mStartTime = std::chrono::system_clock::now();
-  mEndTime = std::chrono::system_clock::now();
+  mStartTime = std::chrono::high_resolution_clock::now();
+  mEndTime = std::chrono::high_resolution_clock::now();
 }
 
 double
 Timer::ElapsedNanoseconds()
 {
-  std::chrono::time_point<std::chrono::system_clock> endTime;
-  endTime = mRunning ? std::chrono::system_clock::now() : mEndTime;
+  std::chrono::time_point<std::chrono::high_resolution_clock> endTime;
+  endTime = mRunning ? std::chrono::high_resolution_clock::now() : mEndTime;
 
   return std::chrono::duration_cast<std::chrono::nanoseconds>(endTime -
                                                               mStartTime)

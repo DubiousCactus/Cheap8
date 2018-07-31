@@ -13,8 +13,8 @@
 class Timer
 {
 private:
-  std::chrono::time_point<std::chrono::system_clock> mStartTime;
-  std::chrono::time_point<std::chrono::system_clock> mEndTime;
+  std::chrono::time_point<std::chrono::high_resolution_clock> mStartTime;
+  std::chrono::time_point<std::chrono::high_resolution_clock> mEndTime;
   bool mRunning = false;
 
 public:

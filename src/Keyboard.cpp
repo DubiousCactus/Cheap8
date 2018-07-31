@@ -14,6 +14,8 @@
 #include <string>
 #include <thread>
 
+using namespace std::chrono_literals;
+
 Keyboard::Keyboard(Chip8* chip)
 {
   mChip = chip;
@@ -65,6 +67,8 @@ Keyboard::ListenerThread()
         timer.Start();
       }
     }
+
+    std::this_thread::sleep_for(20ms);
   }
   timer.Stop();
 }
@@ -74,7 +78,8 @@ Keyboard::StartListening()
 {
   if (!mListening) {
     mListening = true;
-    std::thread(&Keyboard::ListenerThread, this).detach();
+    std::thread tListener(&Keyboard::ListenerThread, this);
+    tListener.detach();
   }
 }
 

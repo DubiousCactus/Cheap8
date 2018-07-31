@@ -10,7 +10,9 @@
 
 #include "CPU.h"
 
+#include <condition_variable>
 #include <cstdint>
+#include <mutex>
 
 class Chip8
 {
@@ -20,6 +22,8 @@ private:
   Memory* mRam;
   Screen* mScreen;
   Keyboard* mKeyboard;
+  std::condition_variable mDrawAction;
+  std::mutex mtx;
 
   void UpdateTimers();
   void Init();

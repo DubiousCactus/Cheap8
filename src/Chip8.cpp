@@ -10,10 +10,14 @@
 #include "Screen.h"
 #include "Timer.h"
 
+#include <chrono>
+#include <condition_variable>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
 #include <thread>
+
+using namespace std::chrono_literals;
 
 Chip8::Chip8(Screen* screen)
 {
@@ -61,45 +65,38 @@ Chip8::Init()
 void
 Chip8::UpdateTimers()
 {
-  Timer chip8Timers;
-  chip8Timers.Start();
   while (this->mRunning) {
-    if (chip8Timers.ElapsedMilliseconds() >= 16) {
-      mCpu->UpdateTimers();
-    }
+    mCpu->UpdateTimers();
+    std::this_thread::sleep_for(16ms);
   }
-  chip8Timers.Stop();
 }
 
 void
 Chip8::CPULoop()
 {
-  Timer cpuTimer;
-  cpuTimer.Start();
   while (mRunning) {
-    /* Run the CPU at 4MHz */
-    if (cpuTimer.ElapsedNanoseconds() >= 250) {
-      /* Run next instruction */
-      mCpu->Step();
-      cpuTimer.Reset();
+    /* Run next instruction */
+    mCpu->Step();
+    if (mCpu->GetDrawFlag()) {
+      mDrawAction.notify_one();
+      mCpu->ResetDrawFlag();
     }
+    /* Run the CPU at 4MHz */
+    std::this_thread::sleep_for(250ns);
   }
-  cpuTimer.Stop();
 }
 
 void
 Chip8::UILoop()
 {
-  Timer displayTimer;
-  displayTimer.Start();
   while (mRunning) {
-    /* Try to refresh the screen at a 60Hz rate */
-    if (displayTimer.ElapsedMilliseconds() >= 16) {
-      mScreen->Draw();
-      displayTimer.Reset();
-    }
+    /* Don't refresh the UI until the buffer has been updated */
+    std::unique_lock<std::mutex> lock(mtx);
+    mDrawAction.wait(lock);
+    mScreen->Draw();
+    /* Try to refresh the screen at a 60Hz rate (max) */
+    std::this_thread::sleep_for(16ms);
   }
-  displayTimer.Stop();
 }
 
 void
@@ -107,11 +104,15 @@ Chip8::Run()
 {
   if (!mRunning) {
     mRunning = true;
-    mKeyboard->StartListening();
-    std::thread(&Chip8::UILoop, this).join();
-    std::thread(&Chip8::CPULoop, this).join();
-    std::thread(&Chip8::UpdateTimers, this).join();
-    mKeyboard->StopListening();
+    // mKeyboard->StartListening();
+    std::thread tUI(&Chip8::UILoop, this);
+    std::thread tCPU(&Chip8::CPULoop, this);
+    std::thread tTimers(&Chip8::UpdateTimers, this);
+    // mKeyboard->StopListening();
+
+    tUI.join();
+    tCPU.join();
+    tTimers.join();
   }
 }
 
