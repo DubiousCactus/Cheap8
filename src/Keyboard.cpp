@@ -13,10 +13,9 @@
 #include <ncurses.h>
 #include <thread>
 
-Keyboard::Keyboard(Chip8* chip, WINDOW* handle)
+Keyboard::Keyboard(Chip8* chip)
 {
     mChip = chip;
-    mWindow = handle;
     mListening = false;
     for (int i = 0; i < 16; i++)
 	mKeys[i] = false;
@@ -29,7 +28,7 @@ Keyboard::ReadKey()
 {
     bool noKeyPress = true;
     uint8_t key;
-    while (noKeyPress) {
+    while (noKeyPress && mListening) {
 	for (int i = 0; i < 16; i++) {
 	    if (mKeys[i]) {
 		key = i;
@@ -55,9 +54,9 @@ Keyboard::ListenerThread()
 	}
 
 	int c = getch();
-	std::string mapping("0123456789ABCDEF");
+	std::string mapping("0123456789abcdef");
 	if (c != ERR) {
-	    if (c == 27) // ESC
+	    if (c == 27 || c == 'q') // ESC or Q
 		mChip->Stop();
 
 	    if (mapping.find(c) >= 0) {
@@ -66,6 +65,7 @@ Keyboard::ListenerThread()
 	    }
 	}
     }
+    timer.Stop();
 }
 
 void

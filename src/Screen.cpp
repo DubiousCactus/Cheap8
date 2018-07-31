@@ -24,9 +24,14 @@ Screen::Screen()
 
 Screen::~Screen()
 {
+    Terminate();
+}
+
+void
+Screen::Terminate()
+{
     delwin(mWindow);
     endwin();
-    delete mWindow;
 }
 
 void
@@ -36,9 +41,9 @@ Screen::Clear()
 }
 
 bool
-Screen::TogglePixel(const uint8_t x, const uint8_t y)
+Screen::TogglePixel(uint8_t x, uint8_t y)
 {
-    bool collision = mBuffer[x][y] == 1 ? true : false;
+    bool collision = mBuffer[x][y] == 1;
     mBuffer[x][y] ^= 1;
 
     return collision;
@@ -47,6 +52,7 @@ Screen::TogglePixel(const uint8_t x, const uint8_t y)
 void
 Screen::Draw()
 {
+    printw("DRAWING\n");
     for (int x = 0; x < SCREEN_WIDTH; x++) {
 	for (int y = 0; y < SCREEN_HEIGHT; y++) {
 	    mvwaddch(

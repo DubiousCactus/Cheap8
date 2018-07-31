@@ -8,6 +8,7 @@
 #include "Chip8.h"
 #include "Keyboard.h"
 #include "Timer.h"
+#include "Screen.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -19,7 +20,7 @@ Chip8::Chip8(Screen* screen)
     mRunning = false;
     mScreen = screen;
     mRam = new Memory();
-    mKeyboard = new Keyboard(this, mScreen->GetHandle());
+    mKeyboard = new Keyboard(this);
     mCpu = new CPU(mKeyboard, mRam, mScreen);
     Init();
 }
@@ -27,6 +28,7 @@ Chip8::Chip8(Screen* screen)
 Chip8::~Chip8()
 {
     delete mCpu;
+    delete mScreen;
     //delete mKeyboard;
     //delete mRam;
 }
@@ -53,7 +55,7 @@ Chip8::Init()
 	0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
 	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
     };
-    mRam->WriteBytes(FONTS_OFFSET, sizeof(fonts) / sizeof(uint8_t), fonts);
+    mRam->WriteBytes(FONTS_OFFSET, sizeof(fonts), fonts);
 }
 
 void
@@ -75,7 +77,7 @@ Chip8::MainLoop()
     Timer displayTimer, cpuTimer;
     displayTimer.Start();
     cpuTimer.Start();
-    mKeyboard->StartListening();
+    //mKeyboard->StartListening();
     while (mRunning) {
 	/* Run the CPU at 4MHz */
 	if (cpuTimer.ElapsedNanoseconds() >= 250) {

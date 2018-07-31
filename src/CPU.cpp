@@ -6,6 +6,7 @@
  */
 
 #include "CPU.h"
+#include "Screen.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -34,7 +35,7 @@ CPU::~CPU()
 void
 CPU::Step()
 {
-  // printf("[*] CPU step (PC=%02X): fetching opcode...\n", mPC);
+   //printw("[*] CPU step (PC=%02X): fetching opcode...\n", mPC);
   mOpcode = mRam->ReadOpCode(mPC); // Fetch next opcode in the RAM
   Execute();
 
@@ -139,7 +140,7 @@ CPU::UpdateTimers()
 void
 CPU::Execute()
 {
-  // printw("[*] Executing opcode: 0x%02X\n", mOpcode);
+   //printw("[*] Executing opcode: 0x%02X\n", mOpcode);
 
   switch (mOpcode & 0xF000) {
     case 0x0000:
@@ -147,9 +148,8 @@ CPU::Execute()
         case 0x00E0: // Clear the screen
           mScreen->Clear();
           break;
-        case 0x00EE:           // Return from subroutine.
-          mPC = mStack->Pop(); // TODO FIX THIS BUG ! It doesn't return from a
-                               // subroutine :/
+        case 0x00EE: // Return from subroutine.
+          mPC = mStack->Pop();
           break;
         default:
           break;
@@ -190,12 +190,12 @@ CPU::Execute()
 
       switch (mOpcode & 0xF0FF) {
         case 0xE09E: // Skip next instruction if the key in VX is pressed
-          printf("waiting for %d\n", mV[x]);
+          printw("waiting for %d\n", mV[x]);
           if (mKeyboard->IsKeyPressed(mV[x]))
             mPC += 2;
           break;
         case 0xE0A1: // Skip next instruction if the key in VX isn't pressed
-          printf("waiting for %d\n", mV[x]);
+          printw("waiting for %d\n", mV[x]);
           if (!mKeyboard->IsKeyPressed(mV[x]))
             mPC += 2;
           break;
@@ -215,7 +215,7 @@ CPU::Execute()
           mV[x] = GetDelay();
           break;
         case 0x000A: // Set VX = key press (blocking)
-          printf("READING KEY\n");
+          printw("READING KEY\n");
           mV[x] = mKeyboard->ReadKey();
           break;
         case 0x0015: // Set delay timer = VX

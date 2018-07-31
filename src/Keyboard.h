@@ -19,13 +19,12 @@ class Keyboard
 private:
   bool mKeys[16];
   bool mListening;
-  WINDOW* mWindow;
   Chip8* mChip;
 
   void ListenerThread();
 
 public:
-  Keyboard(Chip8* chip, WINDOW* handle);
+  Keyboard(Chip8* chip);
   ~Keyboard();
   uint8_t ReadKey();
   void StartListening();

@@ -24,11 +24,12 @@ private:
 public:
   Screen();
   ~Screen();
-  bool TogglePixel(const uint8_t x, const uint8_t y);
+  bool TogglePixel(uint8_t x, uint8_t y);
   void Draw();
   void Clear();
   WINDOW* GetHandle();
   void Resize();
+  void Terminate();
 };
 
 #endif /* !SCREEN_H */
