@@ -18,7 +18,8 @@ Screen::Screen()
   /* Clear the buffer */
   Clear();
   mWindow = newwin(SCREEN_HEIGHT + 2, SCREEN_WIDTH + 2, 5, 5);
-  nodelay(mWindow, TRUE); // <- de-blocking the user input
+  nodelay(stdscr, TRUE); // <- de-blocking the user input
+  keypad(stdscr, TRUE);
   box(mWindow, 0, 0);
   wrefresh(mWindow);
 }
