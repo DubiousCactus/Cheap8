@@ -46,24 +46,30 @@ Keyboard::ReadKey()
 void
 Keyboard::ListenerThread()
 {
+  Timer timer;
+  int c;
+  std::string mapping("0123456789abcdef");
   while (mListening) {
     for (int i = 0; i < 16; i++) {
-      mKeys[i] = false;
+      if (mKeys[i] && timer.ElapsedMilliseconds() >= 5) {
+        mKeys[i] = false;
+        timer.Stop();
+        timer.Reset();
+      }
     }
 
-    printf("Reading\n");
-    int c = getch();
-    std::string mapping("0123456789abcdef");
+    c = getch();
     if (c != ERR) {
       if (c == 27 || c == 'q') // ESC or Q
         mChip->Stop();
 
-      if (mapping.find(c)) {
-        printf("setting key %ld\n", mapping.find(c));
-        mKeys[mapping.find(c)] = true;
+      int keyIndex = (int)mapping.find(c);
+      if (keyIndex >= 0) {
+        mKeys[keyIndex] = true;
+        timer.Start();
       }
     }
-    std::this_thread::sleep_for(10ms);
+    // std::this_thread::sleep_for(1ms);
   }
 }
 
@@ -73,6 +79,7 @@ Keyboard::StartListening()
   if (!mListening) {
     mListening = true;
     tListener = std::thread(&Keyboard::ListenerThread, this);
+    tListener.join();
   }
 }
 
@@ -80,7 +87,6 @@ void
 Keyboard::StopListening()
 {
   mListening = false;
-  tListener.join();
 }
 
 bool

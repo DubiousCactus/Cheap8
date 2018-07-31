@@ -104,10 +104,11 @@ Chip8::Run()
 {
   if (!mRunning) {
     mRunning = true;
-    // mKeyboard->StartListening();
+    /* The order of those threads is somewhat important ! */
     tUI = std::thread(&Chip8::UILoop, this);
     tCPU = std::thread(&Chip8::CPULoop, this);
     tTimers = std::thread(&Chip8::UpdateTimers, this);
+    mKeyboard->StartListening();
 
     tCPU.join();
     tTimers.join();
@@ -118,8 +119,8 @@ Chip8::Run()
 void
 Chip8::Stop()
 {
+  mKeyboard->StopListening();
   mRunning = false;
-  // mKeyboard->StopListening();
 }
 
 /* Load a CHIP-8 program - from a file - into the RAM */

@@ -19,7 +19,7 @@ class Keyboard
 {
 
 private:
-  bool mKeys[16];
+  std::atomic<bool> mKeys[16];
   std::atomic<bool> mListening;
   Chip8* mChip;
   std::thread tListener;

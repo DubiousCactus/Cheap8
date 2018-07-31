@@ -62,7 +62,7 @@ CPU::Draw(uint8_t x, uint8_t y, const uint8_t height)
 {
   if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) {
     printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
-    exit(1);
+    // exit(1);
     if (x > SCREEN_WIDTH) {
       x -= SCREEN_WIDTH;
     } else if (x < 0) {
@@ -202,12 +202,10 @@ CPU::Execute()
 
       switch (mOpcode & 0xF0FF) {
         case 0xE09E: // Skip next instruction if the key in VX is pressed
-          printw("waiting for %d\n", mV[x]);
           if (mKeyboard->IsKeyPressed(mV[x]))
             mPC += 2;
           break;
         case 0xE0A1: // Skip next instruction if the key in VX isn't pressed
-          printw("waiting for %d\n", mV[x]);
           if (!mKeyboard->IsKeyPressed(mV[x]))
             mPC += 2;
           break;
@@ -227,7 +225,6 @@ CPU::Execute()
           mV[x] = GetDelay();
           break;
         case 0x000A: // Set VX = key press (blocking)
-          printw("READING KEY\n");
           mV[x] = mKeyboard->ReadKey();
           break;
         case 0x0015: // Set delay timer = VX
