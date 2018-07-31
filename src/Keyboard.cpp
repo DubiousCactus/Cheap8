@@ -12,13 +12,14 @@
 
 #include <ncurses.h>
 #include <thread>
+#include <string>
 
 Keyboard::Keyboard(Chip8* chip)
 {
     mChip = chip;
     mListening = false;
     for (int i = 0; i < 16; i++)
-	mKeys[i] = false;
+    	mKeys[i] = false;
 }
 
 Keyboard::~Keyboard() {}
@@ -29,12 +30,12 @@ Keyboard::ReadKey()
     bool noKeyPress = true;
     uint8_t key;
     while (noKeyPress && mListening) {
-	for (int i = 0; i < 16; i++) {
-	    if (mKeys[i]) {
-		key = i;
-		noKeyPress = false;
-	    }
-	}
+    	for (int i = 0; i < 16; i++) {
+  	    if (mKeys[i]) {
+      		key = i;
+      		noKeyPress = false;
+  	    }
+    	}
     }
 
     return key;
@@ -45,25 +46,25 @@ Keyboard::ListenerThread()
 {
     Timer timer;
     while (mListening) {
-	for (int i = 0; i < 16; i++) {
-	    if ((mKeys[i] && timer.ElapsedMilliseconds() >= 300)) {
-		mKeys[i] = false;
-		timer.Stop();
-		timer.Reset();
-	    }
-	}
+    	for (int i = 0; i < 16; i++) {
+  	    if ((mKeys[i] && timer.ElapsedMilliseconds() >= 300)) {
+      		mKeys[i] = false;
+      		timer.Stop();
+      		timer.Reset();
+  	    }
+    	}
 
-	int c = getch();
-	std::string mapping("0123456789abcdef");
-	if (c != ERR) {
-	    if (c == 27 || c == 'q') // ESC or Q
-		mChip->Stop();
+    	int c = getch();
+    	std::string mapping("0123456789abcdef");
+    	if (c != ERR) {
+  	    if (c == 27 || c == 'q') // ESC or Q
+      		mChip->Stop();
 
-	    if (mapping.find(c) >= 0) {
-		mKeys[mapping.find(c)] = true;
-		timer.Start();
-	    }
-	}
+  	    if (mapping.find(c)) {
+      		mKeys[mapping.find(c)] = true;
+      		timer.Start();
+  	    }
+    	}
     }
     timer.Stop();
 }
@@ -72,8 +73,8 @@ void
 Keyboard::StartListening()
 {
     if (!mListening) {
-	mListening = true;
-	std::thread(&Keyboard::ListenerThread, this).detach();
+    	mListening = true;
+    	std::thread(&Keyboard::ListenerThread, this).detach();
     }
 }
 

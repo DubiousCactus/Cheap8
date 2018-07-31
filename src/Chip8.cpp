@@ -38,22 +38,22 @@ Chip8::Init()
 {
     /* Init fonts */
     uint8_t fonts[] = {
-	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-	0x20, 0x60, 0x20, 0x20, 0x70, // 1
-	0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-	0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-	0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-	0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-	0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-	0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-	0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-	0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-	0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-	0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-	0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-	0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-	0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+    	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+    	0x20, 0x60, 0x20, 0x20, 0x70, // 1
+    	0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+    	0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+    	0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+    	0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+    	0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+    	0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+    	0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+    	0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+    	0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+    	0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+    	0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+    	0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+    	0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+    	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
     };
     mRam->WriteBytes(FONTS_OFFSET, sizeof(fonts), fonts);
 }
@@ -64,47 +64,54 @@ Chip8::UpdateTimers()
     Timer chip8Timers;
     chip8Timers.Start();
     while (this->mRunning) {
-	if (chip8Timers.ElapsedMilliseconds() >= 16) {
-	    mCpu->UpdateTimers();
-	}
+    	if (chip8Timers.ElapsedMilliseconds() >= 16) {
+  	    mCpu->UpdateTimers();
+    	}
     }
     chip8Timers.Stop();
 }
 
 void
-Chip8::MainLoop()
+Chip8::CPULoop()
 {
-    Timer displayTimer, cpuTimer;
-    displayTimer.Start();
+    Timer cpuTimer;
     cpuTimer.Start();
-    //mKeyboard->StartListening();
     while (mRunning) {
-	/* Run the CPU at 4MHz */
-	if (cpuTimer.ElapsedNanoseconds() >= 250) {
-	    /* Run next instruction */
-	    mCpu->Step();
-	    cpuTimer.Reset();
-	}
-	/* Try to refresh the screen at a 60Hz rate */
-	if (displayTimer.ElapsedMilliseconds() >= 16) {
-	    mScreen->Draw();
-	    displayTimer.Reset();
-	}
+    	/* Run the CPU at 4MHz */
+    	if (cpuTimer.ElapsedNanoseconds() >= 250) {
+  	    /* Run next instruction */
+  	    mCpu->Step();
+  	    cpuTimer.Reset();
+    	}
     }
-    displayTimer.Stop();
     cpuTimer.Stop();
-    mKeyboard->StopListening();
+}
+
+void
+Chip8::UILoop()
+{
+  Timer displayTimer;
+  displayTimer.Start();
+  while (mRunning) {
+  	/* Try to refresh the screen at a 60Hz rate */
+  	if (displayTimer.ElapsedMilliseconds() >= 32) {
+  	    mScreen->Draw();
+  	    displayTimer.Reset();
+  	}
+  }
+  displayTimer.Stop();
 }
 
 void
 Chip8::Run()
 {
     if (!mRunning) {
-	mRunning = true;
-	/* Start the mainLoop thread */
-	std::thread(&Chip8::MainLoop, this).join();
-	/* Start the timer thread */
-	std::thread(&Chip8::UpdateTimers, this).join();
+    	mRunning = true;
+      mKeyboard->StartListening();
+      std::thread(&Chip8::UILoop, this).join();
+    	std::thread(&Chip8::CPULoop, this).join();
+    	std::thread(&Chip8::UpdateTimers, this).join();
+      mKeyboard->StopListening();
     }
 }
 
@@ -120,9 +127,9 @@ Chip8::Load(const char* file_name)
 {
     FILE* file = fopen(file_name, "rb");
     if (file == nullptr) {
-	std::cout << "[!] ERROR: Could not open '" << file_name << "'"
-		  << std::endl;
-	exit(1);
+    	std::cout << "[!] ERROR: Could not open '" << file_name << "'"
+  		  << std::endl;
+    	exit(1);
     }
 
     uint8_t* bytes;
@@ -136,18 +143,18 @@ Chip8::Load(const char* file_name)
     size_t size_read = fread(bytes, 1, file_size, file);
 
     if (file_size > 3584) {
-	printf("[!] ERROR: ROM file too large\n");
-	exit(1);
+    	printf("[!] ERROR: ROM file too large\n");
+    	exit(1);
     }
 
     if (size_read != file_size) {
-	printf("[!] ERROR: could not read %s\n", file_name);
-	exit(1);
+    	printf("[!] ERROR: could not read %s\n", file_name);
+    	exit(1);
     }
 
     if (!mRam->WriteBytes(0x200, size_read, bytes)) {
-	printf("[!] ERROR: could not write the game in the RAM\n");
-	exit(1);
+    	printf("[!] ERROR: could not write the game in the RAM\n");
+    	exit(1);
     }
 
     fclose(file);

@@ -20,6 +20,7 @@ Screen::Screen()
     mWindow = newwin(SCREEN_HEIGHT + 2, SCREEN_WIDTH + 2, 5, 5);
     nodelay(mWindow, TRUE); // <- de-blocking the user input
     box(mWindow, 0, 0);
+    wrefresh(mWindow);
 }
 
 Screen::~Screen()
@@ -52,12 +53,11 @@ Screen::TogglePixel(uint8_t x, uint8_t y)
 void
 Screen::Draw()
 {
-    printw("DRAWING\n");
     for (int x = 0; x < SCREEN_WIDTH; x++) {
-	for (int y = 0; y < SCREEN_HEIGHT; y++) {
-	    mvwaddch(
-	      mWindow, y + 1, x + 1, mBuffer[x][y] == 1 ? ACS_BLOCK : ' ');
-	}
+    	for (int y = 0; y < SCREEN_HEIGHT; y++) {
+  	    mvwaddch(
+  	      mWindow, y + 1, x + 1, mBuffer[x][y] == 1 ? ACS_BLOCK : ' ');
+    	}
     }
     wrefresh(mWindow);
 }

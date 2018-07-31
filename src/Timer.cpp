@@ -25,6 +25,7 @@ void
 Timer::Reset()
 {
 	mStartTime = std::chrono::system_clock::now();
+	mEndTime = std::chrono::system_clock::now();
 }
 
 double
@@ -34,7 +35,7 @@ Timer::ElapsedNanoseconds()
     endTime = mRunning ? std::chrono::system_clock::now() : mEndTime;
 
     return std::chrono::duration_cast<
-	std::chrono::nanoseconds
+    	std::chrono::nanoseconds
     >(endTime - mStartTime).count();
 }
 

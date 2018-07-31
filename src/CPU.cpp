@@ -35,7 +35,7 @@ CPU::~CPU()
 void
 CPU::Step()
 {
-   //printw("[*] CPU step (PC=%02X): fetching opcode...\n", mPC);
+  // printf("[*] CPU step (PC=%02X): fetching opcode...\n", mPC);
   mOpcode = mRam->ReadOpCode(mPC); // Fetch next opcode in the RAM
   Execute();
 
@@ -140,7 +140,7 @@ CPU::UpdateTimers()
 void
 CPU::Execute()
 {
-   //printw("[*] Executing opcode: 0x%02X\n", mOpcode);
+  // printf("[*] Executing opcode: 0x%02X\n", mOpcode);
 
   switch (mOpcode & 0xF000) {
     case 0x0000:

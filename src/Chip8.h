@@ -17,9 +17,6 @@ class Chip8
 
 private:
   bool mRunning;
-  uint8_t mKey[16]; // Hex based keypad
-  uint8_t mDelay_timer;
-  uint8_t mSound_timer;
   CPU* mCpu;
   Memory* mRam;
   Screen* mScreen;
@@ -27,11 +24,12 @@ private:
 
   void UpdateTimers();
   void Init();
+  void CPULoop();
+  void UILoop();
 
 public:
   Chip8(Screen* screen);
   ~Chip8();
-  void MainLoop();
   void Run();
   void Stop();
   void Load(const char* file_name);
