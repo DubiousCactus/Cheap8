@@ -11,7 +11,6 @@
 #include <cstdlib>
 #include <cstring>
 
-
 Memory::Memory()
 {
   memset(mLocations, 0, MEMORY_SIZE * sizeof(mLocations[0]));

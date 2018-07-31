@@ -8,10 +8,10 @@
 #ifndef CPU_H
 #define CPU_H
 
+#include "Keyboard.h"
 #include "Memory.h"
 #include "Screen.h"
 #include "Stack.h"
-#include "Keyboard.h"
 
 #include <cstdint>
 

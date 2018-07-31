@@ -17,7 +17,7 @@ class Stack
 
 private:
   uint16_t mStack[STACK_SIZE]; // Size of an address: 2 bytes
-  uint16_t mSp;               // Points at the top of the stack
+  uint16_t mSp;                // Points at the top of the stack
 
 public:
   Stack();

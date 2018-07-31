@@ -14,7 +14,6 @@
 
 class Chip8
 {
-
 private:
   bool mRunning;
   CPU* mCpu;
