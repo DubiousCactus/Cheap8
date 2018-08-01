@@ -8,6 +8,7 @@
 #include "Screen.h"
 
 #include <cstring>
+#include <iostream>
 
 Screen::Screen()
 {
@@ -75,4 +76,12 @@ Screen::Resize()
   // TODO
   int nh, nw;
   getmaxyx(stdscr, nh, nw); /* get the new screen size */
+}
+
+void
+Screen::Beep(int duration)
+{
+  std::cout << "\a";
+  beep();
+  printf("beeping");
 }

@@ -28,7 +28,5 @@ Stack::Pop()
 void
 Stack::Push(uint16_t word)
 {
-  if (mSp > 0)
-    mSp++;
-  mStack[mSp] = word;
+  mStack[++mSp] = word;
 }

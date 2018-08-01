@@ -31,6 +31,7 @@ public:
   WINDOW* GetHandle();
   void Resize();
   void Terminate();
+  void Beep(int duration);
 };
 
 #endif /* !SCREEN_H */
