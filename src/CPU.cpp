@@ -62,18 +62,7 @@ CPU::Draw(uint8_t x, uint8_t y, const uint8_t height)
 {
   if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) {
     printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
-    // exit(1);
-    if (x > SCREEN_WIDTH) {
-      x -= SCREEN_WIDTH;
-    } else if (x < 0) {
-      x += SCREEN_WIDTH;
-    }
-
-    if (y > SCREEN_HEIGHT) {
-      y -= SCREEN_HEIGHT;
-    } else if (y < 0) {
-      y += SCREEN_HEIGHT;
-    }
+    exit(1);
   }
 
   mV[0xF] = 0;
