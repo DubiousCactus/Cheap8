@@ -82,7 +82,7 @@ Chip8::CPULoop()
       mCpu->ResetDrawFlag();
     }
     /* Run the CPU at XMHz */
-    std::this_thread::sleep_for(1300000ns);
+    std::this_thread::sleep_for(2300000ns);
   }
 }
 

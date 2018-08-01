@@ -60,11 +60,6 @@ CPU::ResetDrawFlag()
 void
 CPU::Draw(uint8_t x, uint8_t y, const uint8_t height)
 {
-  if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) {
-    printf("[ERROR]: Out of screen coordinates! (%d, %d)", x, y);
-    exit(1);
-  }
-
   mV[0xF] = 0;
 
   for (int i = 0; i < height; i++) {
