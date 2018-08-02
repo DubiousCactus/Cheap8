@@ -35,7 +35,6 @@ CPU::~CPU()
 void
 CPU::Step()
 {
-  // printf("[*] CPU step (PC=%02X): fetching opcode...\n", mPC);
   mOpcode = mRam->ReadOpCode(mPC); // Fetch next opcode in the RAM
   Execute();
 

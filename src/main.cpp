@@ -51,12 +51,9 @@ main(int argc, char** argv)
 
   printf("Loading: %s ...\n", argv[1]);
   screen = new Screen();
-  screen->Beep(0);
   cheap8 = new Chip8(screen);
   cheap8->Load(argv[1]);
   cheap8->Run();
-
-  printf("Ending from main");
 
   delete screen;
 

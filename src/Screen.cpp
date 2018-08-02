@@ -46,8 +46,8 @@ Screen::Clear()
 bool
 Screen::TogglePixel(uint8_t x, uint8_t y)
 {
-    if (x < 0 || x >= SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT)
-        return false;
+  if (x < 0 || x >= SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT)
+    return false;
 
   bool collision = mBuffer[x][y] == 1;
   mBuffer[x][y] ^= 1;
@@ -65,12 +65,6 @@ Screen::Draw()
   }
   box(mWindow, 0, 0);
   wrefresh(mWindow);
-}
-
-WINDOW*
-Screen::GetHandle()
-{
-  return mWindow;
 }
 
 void

@@ -33,8 +33,8 @@ Chip8::~Chip8()
 {
   delete mCpu;
   delete mScreen;
-  // delete mKeyboard;
-  // delete mRam;
+  delete mKeyboard;
+  delete mRam;
 }
 
 void
@@ -95,7 +95,7 @@ Chip8::UILoop()
     mDrawAction.wait_for(lock, std::chrono::milliseconds(5));
     mScreen->Draw();
     /* Try to refresh the screen at a XHz rate (max) */
-    std::this_thread::sleep_for(5ms);
+    std::this_thread::sleep_for(4ms);
   }
 }
 

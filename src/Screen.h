@@ -28,7 +28,6 @@ public:
   bool TogglePixel(uint8_t x, uint8_t y);
   void Draw();
   void Clear();
-  WINDOW* GetHandle();
   void Resize();
   void Terminate();
   void Beep(int duration);
