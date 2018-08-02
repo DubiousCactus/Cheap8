@@ -28,8 +28,8 @@ private:
   Keyboard* mKeyboard;
   Stack* mStack; // Must be at least of size 16
   Screen* mScreen;
-  uint8_t mDelay_timer;
-  uint8_t mSound_timer;
+  std::atomic<uint8_t> mDelay_timer;
+  std::atomic<uint8_t> mSound_timer;
   bool mJMP;
   std::atomic<bool> mDrawFlag;
 

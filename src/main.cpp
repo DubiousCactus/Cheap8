@@ -49,7 +49,6 @@ main(int argc, char** argv)
     return 0;
   }
 
-  printf("Loading: %s ...\n", argv[1]);
   screen = new Screen();
   cheap8 = new Chip8(screen);
   cheap8->Load(argv[1]);

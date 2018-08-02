@@ -32,7 +32,6 @@ Chip8::Chip8(Screen* screen)
 Chip8::~Chip8()
 {
   delete mCpu;
-  delete mScreen;
   delete mKeyboard;
   delete mRam;
 }
@@ -65,7 +64,7 @@ Chip8::Init()
 void
 Chip8::UpdateTimers()
 {
-  while (this->mRunning) {
+  while (mRunning) {
     mCpu->UpdateTimers();
     std::this_thread::sleep_for(16ms);
   }
@@ -82,7 +81,7 @@ Chip8::CPULoop()
       mCpu->ResetDrawFlag();
     }
     /* Run the CPU at XMHz */
-    std::this_thread::sleep_for(2300000ns);
+    std::this_thread::sleep_for(2000000ns);
   }
 }
 
@@ -95,7 +94,7 @@ Chip8::UILoop()
     mDrawAction.wait_for(lock, std::chrono::milliseconds(5));
     mScreen->Draw();
     /* Try to refresh the screen at a XHz rate (max) */
-    std::this_thread::sleep_for(4ms);
+    std::this_thread::sleep_for(2ms);
   }
 }
 
@@ -109,10 +108,6 @@ Chip8::Run()
     tCPU = std::thread(&Chip8::CPULoop, this);
     tTimers = std::thread(&Chip8::UpdateTimers, this);
     mKeyboard->StartListening();
-
-    tCPU.join();
-    tTimers.join();
-    tUI.join();
   }
 }
 

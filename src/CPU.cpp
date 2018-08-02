@@ -38,10 +38,11 @@ CPU::Step()
   mOpcode = mRam->ReadOpCode(mPC); // Fetch next opcode in the RAM
   Execute();
 
-  if (!mJMP)
+  if (!mJMP) {
     mPC += 2;
-  else
+  } else {
     mJMP = false;
+  }
 }
 
 bool
@@ -128,10 +129,12 @@ CPU::SetBCD(uint8_t value)
 void
 CPU::UpdateTimers()
 {
-  if (mDelay_timer > 0)
+  if (mDelay_timer > 0) {
     mDelay_timer--;
-  if (mSound_timer > 0)
+  }
+  if (mSound_timer > 0) {
     mSound_timer--;
+  }
 }
 
 void
@@ -145,8 +148,6 @@ CPU::Execute()
           break;
         case 0x00EE: // Return from subroutine.
           mPC = mStack->Pop();
-          break;
-        default:
           break;
       }
       break;
@@ -178,10 +179,6 @@ CPU::Execute()
 
     case 0xE000: {
       uint8_t x = ((mOpcode & 0x0F00) >> 8);
-      if (x < 0 || x >= 16) {
-        std::cout << "ERROR: invalid register (R" << x << ")" << std::endl;
-        exit(1);
-      }
 
       switch (mOpcode & 0xF0FF) {
         case 0xE09E: // Skip next instruction if the key in VX is pressed
@@ -198,10 +195,6 @@ CPU::Execute()
 
     case 0xF000: {
       uint8_t x = ((mOpcode & 0x0F00) >> 8);
-      if (x < 0 || x >= 16) {
-        std::cout << "ERROR: invalid register";
-        exit(1);
-      }
 
       switch (mOpcode & 0x00FF) {
         case 0x0007: // Set VX = delay timer
@@ -231,8 +224,6 @@ CPU::Execute()
         case 0x0065: // Fill V0 to VX from memory (starting at I)
           LoadRegisters(x, mI);
           break;
-        default:
-          break;
       }
       break;
     }
@@ -241,10 +232,6 @@ CPU::Execute()
       if ((mOpcode & 0xF000) >= 0x3000 && (mOpcode & 0xF000) <= 0x9000) {
         short x = ((mOpcode & 0x0F00) >> 8); // Register index
         uint8_t value = mOpcode & 0x00FF;
-        if (x < 0 || x >= 16) {
-          printf("ERROR (op=0x%02X): invalid register (R%i)", mOpcode, x);
-          exit(1);
-        }
 
         switch (mOpcode & 0xF000) {
           case 0x3000: // Skip next mOpcode if VX = NN
@@ -267,10 +254,6 @@ CPU::Execute()
           case 0x9000: // Refactor for 0x5XY0, 0x8XYN, 0x9XYN
           {
             short x = ((mOpcode & 0x0F00) >> 8), y = ((mOpcode & 0x00F0) >> 4);
-            if (x < 0 || x >= 16 || y < 0 || y >= 16) {
-              std::cout << "ERROR: invalid register";
-              exit(1);
-            }
 
             switch (mOpcode & 0xF00F) {
               case 0x5000: // Skip next opcode if VX == VY
@@ -316,16 +299,10 @@ CPU::Execute()
                 if (mV[x] != mV[y])
                   mPC += 2;
                 break;
-              default:
-                break;
             }
             break;
           }
-          default:
-            break;
         }
-      } else {
-        printf("[WARNING] Unhandled opcode %02X\n", mOpcode);
       }
       break;
   }
